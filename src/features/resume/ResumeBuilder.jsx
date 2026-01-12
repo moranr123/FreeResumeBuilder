@@ -220,13 +220,50 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
     setCurrentSection(index)
   }
 
+  // Check if form has any input data
+  const hasFormData = () => {
+    // Check personal info
+    const hasPersonalInfo = Object.values(resumeData.personalInfo).some(value => 
+      value && value.toString().trim() !== ''
+    )
+    
+    // Check summary
+    const hasSummary = resumeData.summary && resumeData.summary.trim() !== ''
+    
+    // Check arrays
+    const hasArrays = 
+      resumeData.experience.length > 0 ||
+      resumeData.education.length > 0 ||
+      resumeData.skills.length > 0 ||
+      resumeData.tools.length > 0 ||
+      resumeData.languages.length > 0 ||
+      resumeData.certifications.length > 0 ||
+      resumeData.projects.length > 0
+    
+    return hasPersonalInfo || hasSummary || hasArrays
+  }
+
+  // Handle go back with confirmation
+  const handleGoBack = () => {
+    if (hasFormData()) {
+      const confirmed = window.confirm(
+        'You have unsaved changes in your form. Going back will reset all your input.\n\nDo you want to continue?'
+      )
+      if (confirmed) {
+        onBack()
+      }
+    } else {
+      onBack()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header with Back Button and Progress Bar */}
       <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-6 py-3 z-10">
         <div className="flex items-center gap-6">
           <button
-            onClick={onBack}
+            onClick={handleGoBack}
             className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0"
           >
             <Icon name="arrowLeft" className="text-lg" />

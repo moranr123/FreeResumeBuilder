@@ -174,6 +174,8 @@ function ResumeForm({
       if (currentSection < sections.length - 1) {
         setCurrentSection(currentSection + 1)
         setErrors({})
+        // Scroll to top when moving to next section
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   }
@@ -182,6 +184,8 @@ function ResumeForm({
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1)
       setErrors({})
+      // Scroll to top when moving to previous section
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
