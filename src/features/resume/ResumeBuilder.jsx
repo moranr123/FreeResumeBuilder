@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import ResumeForm from './components/ResumeForm'
 import ResumePreview from './components/ResumePreview'
 import { initialResumeData } from '../../constants/resume'
+import { templates } from '../../constants/templates'
+import logoImage from '../../assets/logo.jpg'
 import Icon from '../../components/common/Icon'
 
 const sections = [
@@ -12,10 +14,12 @@ const sections = [
   { id: 'projects', label: 'Projects', icon: 'project' },
 ]
 
-function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
+function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', onBack }) {
   const [resumeData, setResumeData] = useState(initialResumeData)
   const [currentSection, setCurrentSection] = useState(0)
+  const [selectedTemplate, setSelectedTemplate] = useState(initialTemplate)
   const [showDownloadModal, setShowDownloadModal] = useState(false)
+  const [showTemplateModal, setShowTemplateModal] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const downloadPDFRef = useRef(null)
 
@@ -281,6 +285,12 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
     }
   }
 
+  // Handle template change
+  const handleTemplateChange = (templateId) => {
+    setSelectedTemplate(templateId)
+    setShowTemplateModal(false)
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header with Back Button and Progress Bar */}
@@ -294,9 +304,10 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
             <span className="text-sm font-medium">Go Back</span>
           </button>
           
-          {/* Progress Bar */}
-          <div className="flex-1 max-w-md mx-auto">
-            <div className="flex items-center justify-between mb-1.5">
+          {/* Progress Bar - Centered */}
+          <div className="flex-1 flex justify-center">
+            <div className="max-w-md w-full">
+              <div className="flex items-center justify-between mb-1.5">
               {sections.map((section, index) => (
                 <div
                   key={section.id}
@@ -332,8 +343,17 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
             <div className="text-center mt-0.5 text-[9px] text-gray-600">
               Step {currentSection + 1} of {sections.length}: {sections[currentSection].label}
             </div>
+            </div>
           </div>
 
+          {/* Change Template Button - Right Corner */}
+          <button
+            onClick={() => setShowTemplateModal(true)}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 ml-auto"
+          >
+            <Icon name="template" className="text-lg" />
+            <span className="text-sm font-medium">Change Template</span>
+          </button>
         </div>
       </div>
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[calc(100vh-57px)] mt-[57px]">
@@ -392,6 +412,275 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
           }}
         />
       </div>
+
+      {/* Template Change Modal */}
+      {showTemplateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-7xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-4xl font-semibold text-gray-900 mb-4 tracking-tight">Change Template</h2>
+                <p className="text-lg text-gray-600 max-w-2xl">
+                  Select a different template. Your current data will be preserved.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowTemplateModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Template Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              {templates.map((template) => (
+                <div
+                  key={template.id}
+                  onClick={() => handleTemplateChange(template.id)}
+                  className={`relative bg-white border-2 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+                    selectedTemplate === template.id
+                      ? 'border-blue-500 shadow-lg shadow-blue-500/20'
+                      : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+                  }`}
+                >
+                  {/* Preview */}
+                  <div className="relative bg-gray-50 p-6 h-64 flex items-center justify-center">
+                    <div className="w-full h-full bg-white border border-gray-200 rounded p-4 overflow-hidden">
+                      {template.id === 'compact' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="text-[8px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
+                          <div className="text-[5px] text-gray-600 text-center mb-1">Software Engineer</div>
+                          <div className="h-px bg-gray-300 my-1"></div>
+                          <div className="flex gap-2 flex-1 mt-0.5">
+                            <div className="w-[30%] flex flex-col gap-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Skills</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">JavaScript</div>
+                                <div className="text-[4px] text-gray-600">Python</div>
+                                <div className="text-[4px] text-gray-600">React</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Tools</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Git</div>
+                                <div className="text-[4px] text-gray-600">Docker</div>
+                              </div>
+                            </div>
+                            <div className="w-[70%] flex flex-col gap-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Summary</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Experienced software engineer...</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Experience</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] font-semibold">Senior Engineer</div>
+                                <div className="text-[4px] text-gray-600">Tech Company Inc.</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {template.id === 'modern' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="text-[9px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
+                          <div className="text-[5px] text-gray-600 text-center mb-2">Software Engineer</div>
+                          <div className="h-px bg-gray-300 my-1"></div>
+                          <div className="flex gap-2 flex-1 mt-1">
+                            <div className="w-[30%] flex flex-col gap-3">
+                              <div className="flex flex-col gap-1">
+                                <div className="text-[5px] font-bold uppercase">Skills</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">JavaScript</div>
+                                <div className="text-[4px] text-gray-600">Python</div>
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <div className="text-[5px] font-bold uppercase">Tools</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Git</div>
+                              </div>
+                            </div>
+                            <div className="w-[70%] flex flex-col gap-3">
+                              <div className="flex flex-col gap-1">
+                                <div className="text-[5px] font-bold uppercase">Summary</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Experienced software engineer...</div>
+                                <div className="text-[4px] text-gray-600">with expertise in...</div>
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <div className="text-[5px] font-bold uppercase">Experience</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] font-semibold">Senior Engineer</div>
+                                <div className="text-[4px] text-gray-600">Tech Company Inc.</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {template.id === 'classic' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="text-[9px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
+                          <div className="text-[5px] text-gray-600 text-center mb-2">Software Engineer</div>
+                          <div className="h-px bg-gray-300 my-1"></div>
+                          <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
+                              <div className="text-[5px] font-bold uppercase">Summary</div>
+                              <div className="h-px bg-gray-300 mb-0.5"></div>
+                              <div className="text-[4px] text-gray-600">Experienced software engineer with expertise...</div>
+                              <div className="text-[4px] text-gray-600">in modern web technologies...</div>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <div className="text-[5px] font-bold uppercase">Experience</div>
+                              <div className="h-px bg-gray-300 mb-0.5"></div>
+                              <div className="text-[4px] font-semibold">Senior Engineer</div>
+                              <div className="text-[4px] text-gray-600">Tech Company Inc.</div>
+                              <div className="text-[4px] text-gray-600">• Led development projects</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {template.id === 'minimal' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="text-[8px] font-semibold text-center mb-1">Ronald Moran Jr</div>
+                          <div className="h-0.5 bg-gray-300 my-1"></div>
+                          <div className="flex gap-2 flex-1 mt-0.5">
+                            <div className="w-[30%] flex flex-col gap-3">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-semibold uppercase">Skills</div>
+                                <div className="h-px bg-gray-200 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">JavaScript</div>
+                                <div className="text-[4px] text-gray-600">Python</div>
+                              </div>
+                            </div>
+                            <div className="w-[70%] flex flex-col gap-3">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-semibold uppercase">Summary</div>
+                                <div className="h-px bg-gray-200 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Experienced engineer...</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-semibold uppercase">Experience</div>
+                                <div className="h-px bg-gray-200 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Senior Engineer at Tech Co.</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {template.id === 'corporate' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="text-[10px] font-bold mb-0.5">Ronald Moran Jr</div>
+                          <div className="text-[6px] text-gray-700 mb-1">Software Engineer</div>
+                          <div className="h-0.5 bg-blue-500 w-1/4 mb-1"></div>
+                          <div className="flex gap-2 flex-1">
+                            <div className="w-[35%] flex flex-col gap-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase text-blue-600">Education</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] font-semibold">Bachelor of Science</div>
+                                <div className="text-[4px] text-gray-600">State University</div>
+                                <div className="text-[4px] text-gray-500">2016 - 2020</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase text-blue-600">Skills</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">• JavaScript</div>
+                                <div className="text-[4px] text-gray-600">• Python</div>
+                              </div>
+                            </div>
+                            <div className="w-[65%] flex flex-col gap-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase text-blue-600">Summary</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Experienced software engineer...</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase text-blue-600">Work History</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] font-semibold">Senior Engineer</div>
+                                <div className="text-[4px] text-blue-600">Tech Company Inc.</div>
+                                <div className="text-[4px] text-gray-600">• Led development projects</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {template.id === 'with-image' && (
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                          <div className="mb-1.5 pb-1 border-b border-gray-300">
+                            <div className="text-[7px] font-bold mb-0.5">Ronald Moran Jr</div>
+                            <div className="text-[5px] text-gray-600 mb-0.5">Software Engineer</div>
+                            <div className="text-[4px] text-gray-500">email@example.com | +1 (555) 000-0000</div>
+                          </div>
+                          <div className="flex gap-1.5 flex-1">
+                            <div className="w-[28%] flex flex-col gap-2">
+                              <img 
+                                src={logoImage} 
+                                alt="Profile" 
+                                className="w-full aspect-square object-cover rounded border border-gray-200"
+                              />
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Skills</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">JavaScript</div>
+                                <div className="text-[4px] text-gray-600">Python</div>
+                              </div>
+                            </div>
+                            <div className="w-[72%] flex flex-col gap-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Summary</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] text-gray-600">Experienced software engineer...</div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <div className="text-[5px] font-bold uppercase">Experience</div>
+                                <div className="h-px bg-gray-300 mb-0.5"></div>
+                                <div className="text-[4px] font-semibold">Senior Engineer</div>
+                                <div className="text-[4px] text-blue-600">Tech Company Inc.</div>
+                                <div className="text-[4px] text-gray-600">• Led development projects</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    {selectedTemplate === template.id && (
+                      <div className="absolute top-3 right-3 bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+                        <i className="fi fi-rr-check text-sm"></i>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{template.name}</h3>
+                    <p className="text-sm text-gray-600 mb-3 leading-relaxed">{template.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {template.features.map((feature, idx) => (
+                        <span
+                          key={idx}
+                          className={`text-xs px-2 py-1 rounded font-medium ${
+                            selectedTemplate === template.id
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Download Modal */}
       {showDownloadModal && (
