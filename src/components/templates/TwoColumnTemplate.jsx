@@ -1,4 +1,5 @@
 import './TwoColumnTemplate.css'
+import profileImage from '../../assets/logo.jpg'
 
 function TwoColumnTemplate({ resumeData }) {
   const { personalInfo, summary, experience, education, skills, projects } = resumeData
@@ -7,6 +8,9 @@ function TwoColumnTemplate({ resumeData }) {
     <div className="two-column-template">
       <div className="two-column-left">
         <header className="two-column-header">
+          <div className="profile-image-container">
+            <img src={profileImage} alt="Profile" className="profile-image" />
+          </div>
           <h1>{personalInfo.fullName || 'Your Name'}</h1>
           {personalInfo.email && <p className="contact-item">{personalInfo.email}</p>}
           {personalInfo.phone && <p className="contact-item">{personalInfo.phone}</p>}

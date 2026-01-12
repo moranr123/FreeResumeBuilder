@@ -36,6 +36,15 @@ function ResumeForm({
                   />
                 </div>
                 <div className="form-field">
+                  <label>Professional Title <span className="optional">(optional)</span></label>
+                  <input
+                    type="text"
+                    placeholder="Software Engineer, Marketing Manager, etc."
+                    value={resumeData.personalInfo.title}
+                    onChange={(e) => updatePersonalInfo('title', e.target.value)}
+                  />
+                </div>
+                <div className="form-field">
                   <label>Email</label>
                   <input
                     type="email"
@@ -139,6 +148,15 @@ function ResumeForm({
                     />
                   </div>
                   <div className="form-field">
+                    <label>Location <span className="optional">(optional)</span></label>
+                    <input
+                      type="text"
+                      placeholder="City, State"
+                      value={edu.location || ''}
+                      onChange={(e) => updateEducation(edu.id, 'location', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-field">
                     <label>Start Date</label>
                     <input
                       type="text"
@@ -157,10 +175,10 @@ function ResumeForm({
                     />
                   </div>
                   <div className="form-field">
-                    <label>GPA <span className="optional">(optional)</span></label>
+                    <label>GPA/Honors <span className="optional">(optional)</span></label>
                     <input
                       type="text"
-                      placeholder="3.8"
+                      placeholder="3.8 or High Honors"
                       value={edu.gpa}
                       onChange={(e) => updateEducation(edu.id, 'gpa', e.target.value)}
                     />
@@ -205,6 +223,15 @@ function ResumeForm({
                       placeholder="Job Title"
                       value={exp.position}
                       onChange={(e) => updateExperience(exp.id, 'position', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Location <span className="optional">(optional)</span></label>
+                    <input
+                      type="text"
+                      placeholder="City, State"
+                      value={exp.location || ''}
+                      onChange={(e) => updateExperience(exp.id, 'location', e.target.value)}
                     />
                   </div>
                   <div className="form-field">

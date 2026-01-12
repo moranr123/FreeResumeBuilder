@@ -8,6 +8,7 @@ import './ResumeBuilder.css'
 const initialResumeData = {
   personalInfo: {
     fullName: '',
+    title: '',
     email: '',
     phone: '',
     location: '',
@@ -45,6 +46,7 @@ function ResumeBuilder() {
         id: Date.now(),
         company: '',
         position: '',
+        location: '',
         startDate: '',
         endDate: '',
         current: false,
@@ -77,6 +79,7 @@ function ResumeBuilder() {
         school: '',
         degree: '',
         field: '',
+        location: '',
         startDate: '',
         endDate: '',
         gpa: '',

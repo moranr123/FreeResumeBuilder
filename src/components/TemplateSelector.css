@@ -134,16 +134,16 @@
 .template-preview-container {
   background: #f9fafb;
   padding: 8px;
-  height: 400px;
+  height: 550px;
   overflow: hidden;
   position: relative;
 }
 
 .template-preview {
-  transform: scale(0.35);
+  transform: scale(0.50);
   transform-origin: top left;
-  width: 285.71%;
-  height: 285.71%;
+  width: 200%;
+  height: 200%;
   position: absolute;
   top: 0;
   left: 0;
@@ -238,6 +238,6 @@
   }
 
   .template-preview-container {
-    height: 300px;
+    height: 400px;
   }
 }
