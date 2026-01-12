@@ -204,7 +204,7 @@ function ResumeBuilder({ selectedTemplate = 'compact' }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-screen">
         <ResumeForm
           resumeData={resumeData}
