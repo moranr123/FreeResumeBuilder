@@ -15,6 +15,7 @@ const iconMap = {
   preview: 'fi-rr-eye',
   arrowLeft: 'fi-rr-arrow-left',
   chevronLeft: 'fi-rr-angle-left',
+  font: 'fi-rr-text',
 }
 
 function Icon({ name, className = '' }) {

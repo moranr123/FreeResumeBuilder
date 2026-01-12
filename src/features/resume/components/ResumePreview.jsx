@@ -2,9 +2,12 @@ import { useRef, useEffect } from 'react'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
 import Icon from '../../../components/common/Icon'
+import { fonts } from '../../../constants/fonts'
+import { getColorScheme } from '../../../constants/colors'
 
-function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadReady }) {
+function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont = 'inter', selectedColor = 'black', onDownloadReady }) {
   const resumeRef = useRef(null)
+  const colorScheme = getColorScheme(selectedColor)
 
   const downloadPDF = async () => {
     if (!resumeRef.current) return
@@ -197,24 +200,33 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
 
     return (
       <header className={headerStyles[selectedTemplate] || headerStyles.compact}>
-        <h1 className={nameStyles[selectedTemplate] || nameStyles.compact}>
+        <h1 
+          className={nameStyles[selectedTemplate] || nameStyles.compact}
+          style={{ color: colorScheme.colors.primary }}
+        >
           {resumeData.personalInfo.fullName || 'Your Name'}
         </h1>
         {resumeData.personalInfo.title && (
-          <p className={titleStyles[selectedTemplate] || titleStyles.compact}>
+          <p 
+            className={titleStyles[selectedTemplate] || titleStyles.compact}
+            style={{ color: colorScheme.colors.tertiary }}
+          >
             {resumeData.personalInfo.title}
           </p>
         )}
-        <div className={contactStyles[selectedTemplate] || contactStyles.compact}>
+        <div 
+          className={contactStyles[selectedTemplate] || contactStyles.compact}
+          style={{ color: colorScheme.colors.tertiary }}
+        >
           {resumeData.personalInfo.email && (
             <span className="inline-block">{resumeData.personalInfo.email}</span>
           )}
           {resumeData.personalInfo.phone && (
             <>
               {selectedTemplate === 'corporate' ? (
-                <span className="text-gray-400">•</span>
+                <span style={{ color: colorScheme.colors.light }}>•</span>
               ) : (
-                <span className="text-gray-300">|</span>
+                <span style={{ color: colorScheme.colors.light }}>|</span>
               )}
               <span className="inline-block">{resumeData.personalInfo.phone}</span>
             </>
@@ -222,9 +234,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           {resumeData.personalInfo.location && (
             <>
               {selectedTemplate === 'corporate' ? (
-                <span className="text-gray-400">•</span>
+                <span style={{ color: colorScheme.colors.light }}>•</span>
               ) : (
-                <span className="text-gray-300">|</span>
+                <span style={{ color: colorScheme.colors.light }}>|</span>
               )}
               <span className="inline-block">{resumeData.personalInfo.location}</span>
             </>
@@ -232,9 +244,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           {resumeData.personalInfo.linkedin && (
             <>
               {selectedTemplate === 'corporate' ? (
-                <span className="text-gray-400">•</span>
+                <span style={{ color: colorScheme.colors.light }}>•</span>
               ) : (
-                <span className="text-gray-300">|</span>
+                <span style={{ color: colorScheme.colors.light }}>|</span>
               )}
               <span className="inline-block">{resumeData.personalInfo.linkedin}</span>
             </>
@@ -242,9 +254,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           {resumeData.personalInfo.github && (
             <>
               {selectedTemplate === 'corporate' ? (
-                <span className="text-gray-400">•</span>
+                <span style={{ color: colorScheme.colors.light }}>•</span>
               ) : (
-                <span className="text-gray-300">|</span>
+                <span style={{ color: colorScheme.colors.light }}>|</span>
               )}
               <span className="inline-block">{resumeData.personalInfo.github}</span>
             </>
@@ -257,16 +269,22 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
 
   const renderSectionHeader = (title) => {
     const headerStyles = {
-      compact: 'text-[9.5pt] font-bold uppercase tracking-wide mb-0.5 text-black',
-      modern: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5 text-black',
-      classic: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5 text-black',
-      minimal: 'text-[9pt] font-semibold uppercase tracking-wide mb-0.5 text-gray-800',
-      corporate: 'text-[10pt] font-bold uppercase tracking-[0.1em] mb-1.5 text-blue-600',
-      'with-image': 'text-[10pt] font-bold uppercase tracking-wide mb-1 text-gray-900',
+      compact: 'text-[9.5pt] font-bold uppercase tracking-wide mb-0.5',
+      modern: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5',
+      classic: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5',
+      minimal: 'text-[9pt] font-semibold uppercase tracking-wide mb-0.5',
+      corporate: 'text-[10pt] font-bold uppercase tracking-[0.1em] mb-1.5',
+      'with-image': 'text-[10pt] font-bold uppercase tracking-wide mb-1',
     }
+    const headerColor = selectedTemplate === 'corporate' 
+      ? colorScheme.colors.accent 
+      : colorScheme.colors.primary
     return (
       <>
-        <h2 className={headerStyles[selectedTemplate] || headerStyles.compact} style={{ fontVariant: 'small-caps' }}>
+        <h2 
+          className={headerStyles[selectedTemplate] || headerStyles.compact} 
+          style={{ fontVariant: 'small-caps', color: headerColor }}
+        >
           {title}
         </h2>
         {renderDivider()}
@@ -285,7 +303,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   <ul className="list-none p-0 m-0">
                     {resumeData.skills.length > 0 ? (
                       resumeData.skills.map(skill => (
-                        <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25] text-gray-700">
+                        <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary }}>
                           {skill.name}
                         </li>
                       ))
@@ -312,7 +330,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   <ul className="list-none p-0 m-0">
                     {resumeData.tools.length > 0 ? (
                       resumeData.tools.map(tool => (
-                        <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25] text-gray-700">
+                        <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary }}>
                           {tool.name}
                         </li>
                       ))
@@ -339,8 +357,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                     {resumeData.languages.length > 0 ? (
                       resumeData.languages.map(lang => (
                         <li key={lang.id} className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]">
-                          <span className="font-medium text-gray-900">{lang.name}</span>
-                          <span className="text-[7.5pt] text-gray-500">{lang.proficiency}</span>
+                          <span className="font-medium" style={{ color: colorScheme.colors.primary }}>{lang.name}</span>
+                          <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{lang.proficiency}</span>
                         </li>
                       ))
                     ) : (
@@ -371,9 +389,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                     {resumeData.certifications.length > 0 ? (
                       resumeData.certifications.map(cert => (
                         <div key={cert.id} className="leading-[1.25]">
-                          <div className="text-[8.5pt] font-semibold text-gray-900 mb-0">{cert.name}</div>
-                          {cert.issuer && <div className="text-[8pt] text-gray-600">{cert.issuer}</div>}
-                          {cert.date && <div className="text-[7.5pt] text-gray-500">{cert.date}</div>}
+                          <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary }}>{cert.name}</div>
+                          {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary }}>{cert.issuer}</div>}
+                          {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{cert.date}</div>}
                         </div>
                       ))
                     ) : (
@@ -403,7 +421,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   {renderSectionHeader('Summary')}
                   <p className="m-0 text-[8.5pt] leading-[1.3] text-justify">
                     {resumeData.summary ? (
-                      <span className="text-gray-700">{resumeData.summary}</span>
+                      <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
                     ) : (
                       <span className="text-gray-400 italic">
                         Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
@@ -423,16 +441,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                       <div key={exp.id} className="break-inside-avoid">
                         <div className="flex justify-between mb-0.5">
                           <div className="flex-1">
-                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 text-black leading-[1.2]">
+                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                               {exp.position || 'Position'}
                             </h3>
-                            <div className="text-[9pt] font-semibold text-blue-600 mb-0 leading-[1.2]">
+                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: colorScheme.colors.accent }}>
                               {exp.company || 'Company'}
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            {exp.location && <div className="text-[8pt] text-gray-500">{exp.location}</div>}
-                            <div className="text-[8pt] text-gray-600 font-medium">
+                            {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
+                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                               {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                             </div>
                           </div>
@@ -542,24 +560,24 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                       resumeData.projects.map(project => (
                       <div key={project.id} className="break-inside-avoid">
                         <div className="flex justify-between items-baseline mb-0.5">
-                          <h3 className="text-[9.5pt] font-bold m-0 text-black leading-[1.2]">
+                          <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                             {project.name || 'Project Name'}
                           </h3>
                           {project.technologies && (
-                            <span className="text-[7.5pt] text-gray-500 italic">{project.technologies}</span>
+                            <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
                           )}
                         </div>
                         {project.description && (
                           <ul className="list-none p-0 m-0 mt-0">
                             {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                              <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-700">
-                                <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
+                              <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                                <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                                 {line.trim().replace(/^[•\-]\s*/, '')}
                               </li>
                             ))}
                           </ul>
                         )}
-                        <div className="flex gap-2.5 mt-0 text-[7.5pt] text-blue-600">
+                        <div className="flex gap-2.5 mt-0 text-[7.5pt]" style={{ color: colorScheme.colors.accent }}>
                           {project.link && <span>{project.link}</span>}
                           {project.github && <span>{project.github}</span>}
                         </div>
@@ -629,20 +647,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                       <div key={edu.id} className="break-inside-avoid">
                         <div className="flex justify-between mb-0">
                           <div className="flex-1">
-                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 text-black leading-[1.2]">
+                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                               {edu.degree || 'Degree'}
                             </h3>
-                            <div className="text-[9pt] font-semibold text-blue-600 mb-0 leading-[1.2]">
+                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: colorScheme.colors.accent }}>
                               {edu.school || 'School'}
                             </div>
-                            {edu.field && <div className="text-[8.5pt] text-gray-600 italic">{edu.field}</div>}
+                            {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
                           </div>
                           <div className="text-right flex-shrink-0">
-                            {edu.location && <div className="text-[8pt] text-gray-500">{edu.location}</div>}
-                            <div className="text-[8pt] text-gray-600 font-medium">
+                            {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{edu.location}</div>}
+                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                               {edu.startDate} - {edu.endDate}
                             </div>
-                            {edu.gpa && <div className="text-[8pt] text-gray-600 mt-0">GPA: {edu.gpa}</div>}
+                            {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary }}>GPA: {edu.gpa}</div>}
                           </div>
                         </div>
                       </div>
@@ -684,7 +702,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           {renderSectionHeader('Summary')}
           <p className="m-0 text-[8.5pt] leading-[1.3] text-justify">
             {resumeData.summary ? (
-              <span className="text-gray-700">{resumeData.summary}</span>
+              <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
             ) : (
               <span className="text-gray-400 italic">
                 Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
@@ -704,16 +722,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                 <div key={exp.id} className="break-inside-avoid">
                   <div className="flex justify-between mb-0.5">
                     <div className="flex-1">
-                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 text-black leading-[1.2]">
+                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                         {exp.position || 'Position'}
                       </h3>
-                      <div className="text-[9pt] font-semibold text-blue-600 mb-0 leading-[1.2]">
+                      <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: colorScheme.colors.accent }}>
                         {exp.company || 'Company'}
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      {exp.location && <div className="text-[8pt] text-gray-500">{exp.location}</div>}
-                      <div className="text-[8pt] text-gray-600 font-medium">
+                      {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
+                      <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                         {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                       </div>
                     </div>
@@ -721,8 +739,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   {exp.description && (
                     <ul className="list-none p-0 m-0 mt-0">
                       {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-700">
-                          <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
+                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                          <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                           {line.trim().replace(/^[•\-]\s*/, '')}
                         </li>
                       ))}
@@ -823,24 +841,24 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
               resumeData.projects.map(project => (
                 <div key={project.id} className="break-inside-avoid">
                   <div className="flex justify-between items-baseline mb-0.5">
-                    <h3 className="text-[9.5pt] font-bold m-0 text-black leading-[1.2]">
+                    <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                       {project.name || 'Project Name'}
                     </h3>
                     {project.technologies && (
-                      <span className="text-[7.5pt] text-gray-500 italic">{project.technologies}</span>
+                      <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
                     )}
                   </div>
                   {project.description && (
                     <ul className="list-none p-0 m-0 mt-0">
                       {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-700">
-                          <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
+                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                          <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                           {line.trim().replace(/^[•\-]\s*/, '')}
                         </li>
                       ))}
                     </ul>
                   )}
-                  <div className="flex gap-2.5 mt-0 text-[7.5pt] text-blue-600">
+                  <div className="flex gap-2.5 mt-0 text-[7.5pt]" style={{ color: colorScheme.colors.accent }}>
                     {project.link && <span>{project.link}</span>}
                     {project.github && <span>{project.github}</span>}
                   </div>
@@ -910,20 +928,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                 <div key={edu.id} className="break-inside-avoid">
                   <div className="flex justify-between mb-0">
                     <div className="flex-1">
-                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 text-black leading-[1.2]">
+                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
                         {edu.degree || 'Degree'}
                       </h3>
-                      <div className="text-[9pt] font-semibold text-blue-600 mb-0 leading-[1.2]">
+                      <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: colorScheme.colors.accent }}>
                         {edu.school || 'School'}
                       </div>
-                      {edu.field && <div className="text-[8.5pt] text-gray-600 italic">{edu.field}</div>}
+                      {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
                     </div>
                     <div className="text-right flex-shrink-0">
-                      {edu.location && <div className="text-[8pt] text-gray-500">{edu.location}</div>}
-                      <div className="text-[8pt] text-gray-600 font-medium">
+                      {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{edu.location}</div>}
+                      <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                         {edu.startDate} - {edu.endDate}
                       </div>
-                      {edu.gpa && <div className="text-[8pt] text-gray-600 mt-0">GPA: {edu.gpa}</div>}
+                      {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary }}>GPA: {edu.gpa}</div>}
                     </div>
                   </div>
                 </div>
@@ -961,7 +979,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           <div className="flex flex-wrap gap-1.5">
             {resumeData.skills.length > 0 ? (
               resumeData.skills.map(skill => (
-                <span key={skill.id} className="text-[8.5pt] text-gray-700">
+                <span key={skill.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
                   {skill.name}
                 </span>
               ))
@@ -988,7 +1006,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           <div className="flex flex-wrap gap-1.5">
             {resumeData.tools.length > 0 ? (
               resumeData.tools.map(tool => (
-                <span key={tool.id} className="text-[8.5pt] text-gray-700">
+                <span key={tool.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
                   {tool.name}
                 </span>
               ))
@@ -1014,8 +1032,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           <div className="flex flex-wrap gap-2">
             {resumeData.languages.length > 0 ? (
               resumeData.languages.map(lang => (
-                <span key={lang.id} className="text-[8.5pt] text-gray-700">
-                  {lang.name} <span className="text-[7.5pt] text-gray-500">({lang.proficiency})</span>
+                <span key={lang.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
+                  {lang.name} <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>({lang.proficiency})</span>
                 </span>
               ))
             ) : (
@@ -1037,9 +1055,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
             {resumeData.certifications.length > 0 ? (
               resumeData.certifications.map(cert => (
                 <div key={cert.id} className="leading-[1.25]">
-                  <div className="text-[8.5pt] font-semibold text-gray-900 mb-0">{cert.name}</div>
-                  {cert.issuer && <div className="text-[8pt] text-gray-600">{cert.issuer}</div>}
-                  {cert.date && <div className="text-[7.5pt] text-gray-500">{cert.date}</div>}
+                  <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary }}>{cert.name}</div>
+                  {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary }}>{cert.issuer}</div>}
+                  {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{cert.date}</div>}
                 </div>
               ))
             ) : (
@@ -1074,15 +1092,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-1">
-                    <h3 className="text-[10pt] font-semibold text-gray-900 mb-0.5 leading-tight">
+                    <h3 className="text-[10pt] font-semibold mb-0.5 leading-tight" style={{ color: colorScheme.colors.primary }}>
                       {edu.degree || 'Degree'}
                     </h3>
-                    <div className="text-[9pt] text-gray-700 mb-0.5">{edu.school || 'School'}</div>
-                    {edu.field && <div className="text-[8.5pt] text-gray-600 italic">{edu.field}</div>}
-                    <div className="text-[8.5pt] text-gray-500 mt-0.5">
+                    <div className="text-[9pt] mb-0.5" style={{ color: colorScheme.colors.accent }}>{edu.school || 'School'}</div>
+                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
+                    <div className="text-[8.5pt] mt-0.5" style={{ color: colorScheme.colors.muted }}>
                       {edu.startDate} - {edu.endDate}
                     </div>
-                    {edu.gpa && <div className="text-[8.5pt] text-gray-500">GPA: {edu.gpa}</div>}
+                    {edu.gpa && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted }}>GPA: {edu.gpa}</div>}
                   </div>
                 ))
               ) : (
@@ -1106,7 +1124,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
             <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
-                  <li key={skill.id} className="py-0.5 text-[9pt] leading-[1.4] text-gray-700">
+                  <li key={skill.id} className="py-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary }}>
                     • {skill.name}
                   </li>
                 ))
@@ -1131,11 +1149,11 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
         {(resumeData.summary || true) && (
           <section className="mb-4">
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9.5pt] leading-[1.5] text-gray-700 text-justify">
+            <p className="m-0 text-[9.5pt] leading-[1.5] text-justify" style={{ color: colorScheme.colors.secondary }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
-                <span className="text-gray-400 italic">
+                <span className="italic" style={{ color: colorScheme.colors.muted }}>
                   Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies.
                 </span>
               )}
@@ -1153,16 +1171,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   <div key={exp.id} className="mb-1">
                     <div className="flex justify-between items-start mb-1">
                       <div className="flex-1">
-                        <h3 className="text-[10.5pt] font-semibold text-gray-900 mb-0.5">
+                        <h3 className="text-[10.5pt] font-semibold mb-0.5" style={{ color: colorScheme.colors.primary }}>
                           {exp.position || 'Position'}
                         </h3>
-                        <div className="text-[9.5pt] text-blue-600 font-medium">
+                        <div className="text-[9.5pt] font-medium" style={{ color: colorScheme.colors.accent }}>
                           {exp.company || 'Company'}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        {exp.location && <div className="text-[8.5pt] text-gray-500">{exp.location}</div>}
-                        <div className="text-[8.5pt] text-gray-600 font-medium">
+                        {exp.location && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
+                        <div className="text-[8.5pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                           {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                         </div>
                       </div>
@@ -1170,8 +1188,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                     {exp.description && (
                       <ul className="list-none p-0 m-0 mt-1">
                         {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-4 mb-0.5 text-[9pt] leading-[1.4] text-gray-700">
-                            <span className="absolute left-0 text-blue-600">•</span>
+                          <li key={idx} className="relative pl-4 mb-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary }}>
+                            <span className="absolute left-0" style={{ color: colorScheme.colors.accent }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
                         ))}
@@ -1278,7 +1296,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
             <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
-                  <li key={skill.id} className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-700">
+                  <li key={skill.id} className="py-0.5 text-[8.5pt] leading-[1.3]" style={{ color: colorScheme.colors.secondary }}>
                     {skill.name}
                   </li>
                 ))
@@ -1303,8 +1321,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
               {resumeData.languages.length > 0 ? (
                 resumeData.languages.map(lang => (
                   <li key={lang.id} className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]">
-                    <span className="font-medium text-gray-900">{lang.name}</span>
-                    <span className="text-[7.5pt] text-gray-500">{lang.proficiency}</span>
+                    <span className="font-medium" style={{ color: colorScheme.colors.primary }}>{lang.name}</span>
+                    <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{lang.proficiency}</span>
                   </li>
                 ))
               ) : (
@@ -1331,9 +1349,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
               {resumeData.certifications.length > 0 ? (
                 resumeData.certifications.map(cert => (
                   <div key={cert.id} className="leading-[1.3]">
-                    <div className="text-[8.5pt] font-semibold text-gray-900 mb-0">{cert.name}</div>
-                    {cert.issuer && <div className="text-[8pt] text-gray-600">{cert.issuer}</div>}
-                    {cert.date && <div className="text-[7.5pt] text-gray-500">{cert.date}</div>}
+                    <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary }}>{cert.name}</div>
+                    {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary }}>{cert.issuer}</div>}
+                    {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{cert.date}</div>}
                   </div>
                 ))
               ) : (
@@ -1354,11 +1372,11 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
         {(resumeData.summary || true) && (
           <section className="mb-3">
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9pt] leading-[1.4] text-gray-700 text-justify">
+            <p className="m-0 text-[9pt] leading-[1.4] text-justify" style={{ color: colorScheme.colors.secondary }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
-                <span className="text-gray-400 italic">
+                <span className="italic" style={{ color: colorScheme.colors.muted }}>
                   Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users.
                 </span>
               )}
@@ -1376,16 +1394,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                   <div key={exp.id} className="mb-1">
                     <div className="flex justify-between items-start mb-0.5">
                       <div className="flex-1">
-                        <h3 className="text-[10pt] font-bold text-gray-900 mb-0 leading-tight">
+                        <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary }}>
                           {exp.position || 'Position'}
                         </h3>
-                        <div className="text-[9.5pt] font-semibold text-blue-600 mb-0 leading-tight">
+                        <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: colorScheme.colors.accent }}>
                           {exp.company || 'Company'}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        {exp.location && <div className="text-[8pt] text-gray-500">{exp.location}</div>}
-                        <div className="text-[8pt] text-gray-600 font-medium">
+                        {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
+                        <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
                           {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                         </div>
                       </div>
@@ -1393,8 +1411,8 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                     {exp.description && (
                       <ul className="list-none p-0 m-0 mt-0.5">
                         {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35] text-gray-700">
-                            <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
+                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary }}>
+                            <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
                         ))}
@@ -1450,14 +1468,14 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-0">
-                    <h3 className="text-[10pt] font-bold text-gray-900 mb-0 leading-tight">
+                    <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary }}>
                       {edu.degree || 'Degree'}
                     </h3>
-                    <div className="text-[9.5pt] font-semibold text-blue-600 mb-0 leading-tight">
+                    <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: colorScheme.colors.accent }}>
                       {edu.school || 'School'}
                     </div>
-                    {edu.field && <div className="text-[8.5pt] text-gray-600 italic">{edu.field}</div>}
-                    <div className="text-[8pt] text-gray-500 mt-0.5">
+                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
+                    <div className="text-[8pt] mt-0.5" style={{ color: colorScheme.colors.muted }}>
                       {edu.startDate} - {edu.endDate}
                     </div>
                   </div>
@@ -1487,18 +1505,18 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
                 resumeData.projects.map(project => (
                   <div key={project.id} className="mb-0">
                     <div className="flex justify-between items-baseline mb-0.5">
-                      <h3 className="text-[10pt] font-bold text-gray-900 leading-tight">
+                      <h3 className="text-[10pt] font-bold leading-tight" style={{ color: colorScheme.colors.primary }}>
                         {project.name || 'Project Name'}
                       </h3>
                       {project.technologies && (
-                        <span className="text-[7.5pt] text-gray-500 italic">{project.technologies}</span>
+                        <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
                       )}
                     </div>
                     {project.description && (
                       <ul className="list-none p-0 m-0 mt-0">
                         {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35] text-gray-700">
-                            <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
+                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary }}>
+                            <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
                         ))}
@@ -1541,9 +1559,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', onDownloadRea
           data-resume-content
           className={getTemplateClasses()}
           style={{ 
-            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+            fontFamily: fonts.find(f => f.id === selectedFont)?.family || fonts[0].family,
             boxSizing: 'border-box',
-            margin: 0
+            margin: 0,
+            '--color-primary': colorScheme.colors.primary,
+            '--color-secondary': colorScheme.colors.secondary,
+            '--color-tertiary': colorScheme.colors.tertiary,
+            '--color-accent': colorScheme.colors.accent,
+            '--color-muted': colorScheme.colors.muted,
+            '--color-light': colorScheme.colors.light,
           }}
         >
           {renderHeader()}

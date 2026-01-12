@@ -3,6 +3,8 @@ import ResumeForm from './components/ResumeForm'
 import ResumePreview from './components/ResumePreview'
 import { initialResumeData } from '../../constants/resume'
 import { templates } from '../../constants/templates'
+import { fonts } from '../../constants/fonts'
+import { textColors, getColorScheme } from '../../constants/colors'
 import logoImage from '../../assets/logo.jpg'
 import Icon from '../../components/common/Icon'
 
@@ -33,8 +35,12 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', onBack }
   const [resumeData, setResumeData] = useState(initialResumeData)
   const [currentSection, setCurrentSection] = useState(0)
   const [selectedTemplate, setSelectedTemplate] = useState(initialTemplate)
+  const [selectedFont, setSelectedFont] = useState('inter')
+  const [selectedColor, setSelectedColor] = useState('black')
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const [showTemplateModal, setShowTemplateModal] = useState(false)
+  const [showFontModal, setShowFontModal] = useState(false)
+  const [showColorModal, setShowColorModal] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const downloadPDFRef = useRef(null)
 
@@ -376,14 +382,34 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', onBack }
             </div>
           </div>
 
-          {/* Change Template Button - Right Corner */}
-          <button
-            onClick={() => setShowTemplateModal(true)}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 ml-auto"
-          >
-            <Icon name="template" className="text-lg" />
-            <span className="text-sm font-medium">Change Template</span>
-          </button>
+          {/* Font, Color and Template Buttons - Right Corner */}
+          <div className="flex items-center gap-3 ml-auto">
+            <button
+              onClick={() => setShowFontModal(true)}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0"
+              title="Change Font"
+            >
+              <Icon name="font" className="text-lg" />
+              <span className="text-sm font-medium hidden sm:inline">Font</span>
+            </button>
+            <button
+              onClick={() => setShowColorModal(true)}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0"
+              title="Change Text Color"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+              <span className="text-sm font-medium hidden sm:inline">Color</span>
+            </button>
+            <button
+              onClick={() => setShowTemplateModal(true)}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0"
+            >
+              <Icon name="template" className="text-lg" />
+              <span className="text-sm font-medium hidden sm:inline">Template</span>
+            </button>
+          </div>
         </div>
       </div>
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[calc(100vh-57px)] mt-[57px]">
@@ -437,6 +463,8 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', onBack }
         <ResumePreview
           resumeData={resumeData}
           selectedTemplate={selectedTemplate}
+          selectedFont={selectedFont}
+          selectedColor={selectedColor}
           onDownloadReady={(downloadFn) => {
             downloadPDFRef.current = downloadFn
           }}
@@ -706,6 +734,144 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', onBack }
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Font Selection Modal */}
+      {showFontModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Select Font Style</h2>
+              <button
+                onClick={() => setShowFontModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Choose a font style for your resume. The selected font will be applied to all text elements.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {fonts.map((font) => (
+                <button
+                  key={font.id}
+                  onClick={() => {
+                    setSelectedFont(font.id)
+                    setShowFontModal(false)
+                  }}
+                  className={`relative p-4 border-2 rounded-lg text-left transition-all duration-200 ${
+                    selectedFont === font.id
+                      ? 'border-blue-500 bg-blue-50 shadow-md'
+                      : 'border-gray-200 hover:border-blue-300 hover:shadow-sm'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: font.family }}>
+                      {font.name}
+                    </h3>
+                    {selectedFont === font.id && (
+                      <div className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-600" style={{ fontFamily: font.family }}>
+                    The quick brown fox jumps over the lazy dog
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Color Selection Modal */}
+      {showColorModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Select Text Color Scheme</h2>
+              <button
+                onClick={() => setShowColorModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Choose a color scheme for your resume. The selected colors will be applied to all text elements.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {textColors.map((colorScheme) => (
+                <button
+                  key={colorScheme.id}
+                  onClick={() => {
+                    setSelectedColor(colorScheme.id)
+                    setShowColorModal(false)
+                  }}
+                  className={`relative p-4 border-2 rounded-lg text-left transition-all duration-200 ${
+                    selectedColor === colorScheme.id
+                      ? 'border-blue-500 bg-blue-50 shadow-md'
+                      : 'border-gray-200 hover:border-blue-300 hover:shadow-sm'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{colorScheme.name}</h3>
+                      <p className="text-xs text-gray-500 mt-1">{colorScheme.description}</p>
+                    </div>
+                    {selectedColor === colorScheme.id && (
+                      <div className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 rounded border border-gray-300"
+                        style={{ backgroundColor: colorScheme.colors.primary }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="text-xs text-gray-600">Primary</div>
+                        <div className="text-xs font-mono text-gray-500">{colorScheme.colors.primary}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 rounded border border-gray-300"
+                        style={{ backgroundColor: colorScheme.colors.secondary }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="text-xs text-gray-600">Secondary</div>
+                        <div className="text-xs font-mono text-gray-500">{colorScheme.colors.secondary}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-8 h-8 rounded border border-gray-300"
+                        style={{ backgroundColor: colorScheme.colors.tertiary }}
+                      ></div>
+                      <div className="flex-1">
+                        <div className="text-xs text-gray-600">Tertiary</div>
+                        <div className="text-xs font-mono text-gray-500">{colorScheme.colors.tertiary}</div>
+                      </div>
+                    </div>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
