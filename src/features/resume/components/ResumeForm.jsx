@@ -1028,7 +1028,7 @@ function ResumeForm({
             className={`px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 ${
               currentSection === sections.length - 1
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-gray-900 text-white hover:bg-gray-800'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
             }`}
           >
             Next

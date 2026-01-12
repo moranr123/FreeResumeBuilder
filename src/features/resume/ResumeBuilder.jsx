@@ -227,19 +227,19 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
         <div className="flex items-center gap-6">
           <button
             onClick={onBack}
-            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0"
           >
             <Icon name="arrowLeft" className="text-lg" />
+            <span className="text-sm font-medium">Go Back</span>
           </button>
           
           {/* Progress Bar */}
           <div className="flex-1 max-w-md mx-auto">
             <div className="flex items-center justify-between mb-1.5">
               {sections.map((section, index) => (
-                <button
+                <div
                   key={section.id}
-                  onClick={() => goToSection(index)}
-                  className={`flex flex-col items-center gap-0.5 transition-all ${
+                  className={`flex flex-col items-center gap-0.5 transition-all cursor-default ${
                     index === currentSection
                       ? 'text-gray-900'
                       : index < currentSection
@@ -259,7 +259,7 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
                     <Icon name={section.icon} className="text-[8px]" />
                   </div>
                   <span className="text-[9px] font-medium hidden sm:block">{section.label}</span>
-                </button>
+                </div>
               ))}
             </div>
             <div className="w-full bg-gray-200 rounded-full h-0.5">
@@ -275,11 +275,16 @@ function ResumeBuilder({ selectedTemplate = 'compact', onBack }) {
 
           <button 
             onClick={() => {
-              if (downloadPDFRef.current) {
+              if (downloadPDFRef.current && currentSection === sections.length - 1) {
                 downloadPDFRef.current()
               }
             }}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors flex-shrink-0"
+            disabled={currentSection !== sections.length - 1}
+            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors flex-shrink-0 ${
+              currentSection === sections.length - 1
+                ? 'bg-gray-900 text-white hover:bg-gray-800 cursor-pointer'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
           >
             <Icon name="download" className="text-sm" />
             Download PDF
