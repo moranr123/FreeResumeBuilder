@@ -1,11 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Icon from '../../components/common/Icon'
 import { templates } from '../../constants/templates'
 import logoImage from '../../assets/logo.jpg'
 
 function LandingPage({ onGetStarted }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const defaultPreviewColor = '#D1D5DB' // Default gray for previews
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    
+    const handleChange = (e) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   // Render template preview matching template selection screen
   const renderTemplatePreview = (template) => {
@@ -389,90 +401,69 @@ function LandingPage({ onGetStarted }) {
     return null
   }
 
-  // Auto-rotate gallery
+  // Auto-rotate gallery with pause on interaction
   useEffect(() => {
+    if (isPaused || prefersReducedMotion) return
+    
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % templates.length)
     }, 3000)
     return () => clearInterval(interval)
+  }, [isPaused, prefersReducedMotion])
+
+  const handlePrev = useCallback(() => {
+    setIsPaused(true)
+    setCurrentIndex((prev) => (prev - 1 + templates.length) % templates.length)
+    // Resume auto-rotation after 5 seconds
+    setTimeout(() => setIsPaused(false), 5000)
   }, [])
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + templates.length) % templates.length)
-  }
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
+    setIsPaused(true)
     setCurrentIndex((prev) => (prev + 1) % templates.length)
-  }
+    // Resume auto-rotation after 5 seconds
+    setTimeout(() => setIsPaused(false), 5000)
+  }, [])
 
-  const handleDotClick = (index) => {
+  const handleDotClick = useCallback((index) => {
+    setIsPaused(true)
     setCurrentIndex(index)
-  }
+    // Resume auto-rotation after 5 seconds
+    setTimeout(() => setIsPaused(false), 5000)
+  }, [])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev()
+      } else if (e.key === 'ArrowRight') {
+        handleNext()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handlePrev, handleNext])
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Content */}
-          <div className="text-center lg:text-left">
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Build Your Perfect
-              <span className="text-blue-600 block">Resume in Minutes</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Create professional, ATS-friendly resumes with our easy-to-use builder. 
-              Choose from multiple templates and export your resume as a PDF instantly.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button
-                onClick={onGetStarted}
-                className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-              >
-                Create your resume now
-                <Icon name="arrow-right" className="text-white" />
-              </button>
-            </div>
-            
-            {/* Features */}
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="flex flex-col items-center lg:items-start">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
-                  <Icon name="file" className="text-blue-600 text-2xl" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">ATS-Friendly</h3>
-                <p className="text-sm text-gray-600 text-center lg:text-left">Optimized for tracking systems</p>
-              </div>
-              <div className="flex flex-col items-center lg:items-start">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
-                  <Icon name="download" className="text-blue-600 text-2xl" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">PDF Export</h3>
-                <p className="text-sm text-gray-600 text-center lg:text-left">Download instantly</p>
-              </div>
-              <div className="flex flex-col items-center lg:items-start">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
-                  <Icon name="palette" className="text-blue-600 text-2xl" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">Multiple Templates</h3>
-                <p className="text-sm text-gray-600 text-center lg:text-left">Choose your style</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Circular Gallery */}
-          <div className="relative">
-            <div className="relative w-full max-w-lg mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-4 lg:h-full">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-6 items-center lg:h-full">
+          {/* Circular Gallery Section - First on all screens */}
+          <div className="relative order-1 lg:order-1 w-full flex justify-center lg:items-center lg:h-full">
+            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
               {/* Circular Gallery Container */}
-              <div className="relative aspect-square">
+              <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] lg:max-w-full mx-auto">
                 {/* Main Center Card */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="bg-white rounded-2xl shadow-2xl transform transition-all duration-500 scale-100 p-4">
+                  <div className="bg-white rounded-2xl shadow-2xl transform transition-all duration-500 scale-100 p-2 sm:p-3 lg:p-4">
                     {/* Paper frame - US Letter: 8.5" x 11" (aspect ratio 1:1.294) */}
                     <div 
                       className="relative bg-white shadow-lg"
                       style={{
-                        width: '256px',
+                        width: 'clamp(180px, 40vw, 256px)',
                         aspectRatio: '8.5 / 11', // US Letter aspect ratio
                         border: '1px solid #E5E7EB',
                       }}
@@ -481,7 +472,7 @@ function LandingPage({ onGetStarted }) {
                       <div className="absolute inset-0 border border-gray-300 pointer-events-none" style={{ borderWidth: '0.5px' }}></div>
                       
                       {/* Resume content - scaled to fit paper frame */}
-                      <div className="w-full h-full p-3 overflow-hidden" style={{ boxSizing: 'border-box' }}>
+                      <div className="w-full h-full p-2 sm:p-3 overflow-hidden" style={{ boxSizing: 'border-box' }}>
                         {renderTemplatePreview(templates[currentIndex])}
                       </div>
                     </div>
@@ -491,13 +482,14 @@ function LandingPage({ onGetStarted }) {
                 {/* Circular Gallery Items */}
                 {templates.map((template, index) => {
                   const angle = (360 / templates.length) * index - (360 / templates.length) * currentIndex
-                  const radius = 200
+                  // Responsive radius - smaller on mobile, larger on desktop
+                  const radius = 150 // Base radius that works well across screen sizes
                   const x = Math.cos((angle - 90) * (Math.PI / 180)) * radius
                   const y = Math.sin((angle - 90) * (Math.PI / 180)) * radius
                   const isActive = index === currentIndex
                   const distance = Math.sqrt(x * x + y * y)
-                  const scale = isActive ? 1 : Math.max(0.5, 1 - distance / 400)
-                  const opacity = isActive ? 1 : Math.max(0.3, 1 - distance / 300)
+                  const scale = isActive ? 1 : Math.max(0.4, 1 - distance / 400)
+                  const opacity = isActive ? 1 : Math.max(0.2, 1 - distance / 300)
 
                   return (
                     <div
@@ -510,9 +502,9 @@ function LandingPage({ onGetStarted }) {
                       }}
                     >
                       <div
-                        className={`bg-white rounded-xl shadow-xl cursor-pointer transition-all duration-700 p-2 ${
+                        className={`bg-white rounded-xl shadow-xl cursor-pointer transition-all duration-700 p-1 sm:p-2 ${
                           isActive
-                            ? 'ring-4 ring-blue-500 ring-opacity-50'
+                            ? 'ring-2 sm:ring-4 ring-blue-500 ring-opacity-50'
                             : 'hover:ring-2 hover:ring-blue-300'
                         }`}
                         onClick={() => handleDotClick(index)}
@@ -524,7 +516,7 @@ function LandingPage({ onGetStarted }) {
                         <div 
                           className="relative bg-white shadow-md"
                           style={{
-                            width: '144px',
+                            width: 'clamp(100px, 25vw, 144px)',
                             aspectRatio: '8.5 / 11', // US Letter aspect ratio
                             border: '1px solid #E5E7EB',
                           }}
@@ -533,7 +525,7 @@ function LandingPage({ onGetStarted }) {
                           <div className="absolute inset-0 border border-gray-300 pointer-events-none" style={{ borderWidth: '0.5px' }}></div>
                           
                           {/* Resume content - scaled to fit paper frame */}
-                          <div className="w-full h-full p-2 overflow-hidden" style={{ boxSizing: 'border-box' }}>
+                          <div className="w-full h-full p-1 sm:p-2 overflow-hidden" style={{ boxSizing: 'border-box' }}>
                             {renderTemplatePreview(template)}
                           </div>
                         </div>
@@ -544,38 +536,95 @@ function LandingPage({ onGetStarted }) {
               </div>
 
               {/* Navigation Controls */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full mt-8 flex items-center gap-4">
+              <div 
+                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full mt-4 sm:mt-6 lg:mt-3 xl:mt-4 flex items-center gap-2 sm:gap-4 lg:gap-3"
+                role="group"
+                aria-label="Template navigation"
+              >
                 <button
                   onClick={handlePrev}
-                  className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   aria-label="Previous template"
+                  type="button"
                 >
-                  <Icon name="chevron-left" className="text-gray-700 text-xl" />
+                  <Icon name="chevronLeft" className="text-gray-700 text-lg sm:text-xl" aria-hidden="true" />
                 </button>
 
                 {/* Dots Indicator */}
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2" role="tablist" aria-label="Template selection">
                   {templates.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => handleDotClick(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                         index === currentIndex
-                          ? 'bg-blue-600 w-8'
-                          : 'bg-gray-300 hover:bg-gray-400'
+                          ? 'bg-blue-600 w-6 sm:w-8'
+                          : 'bg-gray-300 hover:bg-gray-400 w-2'
                       }`}
                       aria-label={`Go to template ${index + 1}`}
+                      aria-selected={index === currentIndex}
+                      role="tab"
+                      type="button"
                     />
                   ))}
                 </div>
 
                 <button
                   onClick={handleNext}
-                  className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   aria-label="Next template"
+                  type="button"
                 >
-                  <Icon name="chevron-right" className="text-gray-700 text-xl" />
+                  <Icon name="chevronRight" className="text-gray-700 text-lg sm:text-xl" aria-hidden="true" />
                 </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Section - Second on mobile, right side on desktop */}
+          <div className="text-center lg:text-left order-2 lg:order-2 w-full lg:flex lg:flex-col lg:justify-center lg:h-full">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 lg:mb-3 xl:mb-4 leading-tight">
+              Build Your Perfect
+              <span className="text-blue-600 block">Resume in Minutes</span>
+            </h1>
+            <p className="text-base sm:text-lg lg:text-base xl:text-lg text-gray-600 mb-6 sm:mb-8 lg:mb-4 xl:mb-6 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              Create professional, ATS-friendly resumes with our easy-to-use builder. 
+              Choose from multiple templates and export your resume as a PDF instantly.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8 lg:mb-4 xl:mb-6">
+              <button
+                onClick={onGetStarted}
+                className="px-6 sm:px-8 py-3 sm:py-4 lg:px-6 lg:py-2.5 xl:px-8 xl:py-3 bg-blue-600 text-white text-base sm:text-lg lg:text-sm xl:text-base font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Start building your resume"
+                type="button"
+              >
+                Create your resume now
+                <Icon name="arrowRight" className="text-white" aria-hidden="true" />
+              </button>
+            </div>
+            
+            {/* Features */}
+            <div className="mt-8 sm:mt-12 lg:mt-4 xl:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-3 xl:gap-4">
+              <div className="flex flex-col items-center lg:items-start">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-10 lg:h-10 xl:w-12 xl:h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2 sm:mb-3 lg:mb-1.5 xl:mb-2">
+                  <Icon name="file" className="text-blue-600 text-xl sm:text-2xl lg:text-lg xl:text-xl" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base lg:text-xs xl:text-sm">ATS-Friendly</h3>
+                <p className="text-xs sm:text-sm lg:text-xs text-gray-600 text-center lg:text-left">Optimized for tracking systems</p>
+              </div>
+              <div className="flex flex-col items-center lg:items-start">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-10 lg:h-10 xl:w-12 xl:h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2 sm:mb-3 lg:mb-1.5 xl:mb-2">
+                  <Icon name="download" className="text-blue-600 text-xl sm:text-2xl lg:text-lg xl:text-xl" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base lg:text-xs xl:text-sm">PDF Export</h3>
+                <p className="text-xs sm:text-sm lg:text-xs text-gray-600 text-center lg:text-left">Download instantly</p>
+              </div>
+              <div className="flex flex-col items-center lg:items-start">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-10 lg:h-10 xl:w-12 xl:h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2 sm:mb-3 lg:mb-1.5 xl:mb-2">
+                  <Icon name="palette" className="text-blue-600 text-xl sm:text-2xl lg:text-lg xl:text-xl" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base lg:text-xs xl:text-sm">Multiple Templates</h3>
+                <p className="text-xs sm:text-sm lg:text-xs text-gray-600 text-center lg:text-left">Choose your style</p>
               </div>
             </div>
           </div>

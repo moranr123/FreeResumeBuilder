@@ -1,7 +1,20 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
+import ErrorBoundary from './components/common/ErrorBoundary'
 import LandingPage from './features/landing/LandingPage'
-import TemplateSelection from './features/template/TemplateSelection'
-import ResumeBuilder from './features/resume/ResumeBuilder'
+
+// Lazy load heavy components for better performance
+const TemplateSelection = lazy(() => import('./features/template/TemplateSelection'))
+const ResumeBuilder = lazy(() => import('./features/resume/ResumeBuilder'))
+
+// Loading component
+const LoadingSpinner = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-gray-600">Loading...</p>
+    </div>
+  </div>
+)
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
@@ -23,27 +36,29 @@ function App() {
     return templateColors[templateId] || '#F2F2F2'
   }
 
-  if (showLanding) {
-    return <LandingPage onGetStarted={() => setShowLanding(false)} />
-  }
-
-  if (!selectedTemplate) {
-    return (
-      <TemplateSelection 
-        onSelectTemplate={setSelectedTemplate} 
-        templateColors={templateColors}
-        onTemplateColorChange={handleTemplateColorChange}
-        getTemplateColor={getTemplateColor}
-      />
-    )
-  }
-
   return (
-    <ResumeBuilder 
-      selectedTemplate={selectedTemplate} 
-      themeColor={getTemplateColorWithDefault(selectedTemplate)} 
-      onBack={() => setSelectedTemplate(null)} 
-    />
+    <ErrorBoundary>
+      {showLanding ? (
+        <LandingPage onGetStarted={() => setShowLanding(false)} />
+      ) : !selectedTemplate ? (
+        <Suspense fallback={<LoadingSpinner />}>
+          <TemplateSelection 
+            onSelectTemplate={setSelectedTemplate} 
+            templateColors={templateColors}
+            onTemplateColorChange={handleTemplateColorChange}
+            getTemplateColor={getTemplateColor}
+          />
+        </Suspense>
+      ) : (
+        <Suspense fallback={<LoadingSpinner />}>
+          <ResumeBuilder 
+            selectedTemplate={selectedTemplate} 
+            themeColor={getTemplateColorWithDefault(selectedTemplate)} 
+            onBack={() => setSelectedTemplate(null)} 
+          />
+        </Suspense>
+      )}
+    </ErrorBoundary>
   )
 }
 

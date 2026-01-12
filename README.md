@@ -45,7 +45,19 @@ To create a production build:
 npm run build
 ```
 
-The built files will be in the `dist` directory.
+The built files will be in the `dist` directory. The production build includes:
+- Minified and optimized code
+- Code splitting for better performance
+- Tree shaking to remove unused code
+- Console logs removed
+
+### Preview Production Build
+
+To preview the production build locally:
+
+```bash
+npm run preview
+```
 
 ## Usage
 
@@ -77,13 +89,31 @@ The resume template features:
 - **Small Caps Headers**: Bold, uppercase section titles with thin dividers
 - **One-Page Fit**: Optimized to fit all content on a single page
 
+## Production Features
+
+- ✅ **Error Boundaries**: Graceful error handling with user-friendly error pages
+- ✅ **Lazy Loading**: Code splitting for faster initial load
+- ✅ **SEO Optimized**: Meta tags, Open Graph, and Twitter cards
+- ✅ **Accessibility**: ARIA labels, keyboard navigation, focus management
+- ✅ **Performance**: Memoization, optimized builds, code splitting
+- ✅ **Responsive Design**: Mobile-first approach with breakpoints
+- ✅ **Build Optimization**: Minification, tree shaking, chunk splitting
+
 ## Technologies Used
 
 - React 18
 - Vite
 - jsPDF
 - html2canvas
-- CSS3
+- Tailwind CSS
+- PostCSS
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ## License
 
