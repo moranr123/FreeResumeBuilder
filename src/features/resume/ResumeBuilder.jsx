@@ -1,32 +1,10 @@
 import { useState } from 'react'
-import ResumeForm from './ResumeForm'
-import ResumePreview from './ResumePreview'
-import StepNavigation from './StepNavigation'
-import TemplateSelector from './TemplateSelector'
-import './ResumeBuilder.css'
+import ResumeForm from './components/ResumeForm'
+import ResumePreview from './components/ResumePreview'
+import { initialResumeData } from '../../constants/resume'
 
-const initialResumeData = {
-  personalInfo: {
-    fullName: '',
-    title: '',
-    email: '',
-    phone: '',
-    location: '',
-    linkedin: '',
-    github: '',
-    website: '',
-  },
-  summary: '',
-  experience: [],
-  education: [],
-  skills: [],
-  projects: [],
-}
-
-function ResumeBuilder() {
+function ResumeBuilder({ selectedTemplate = 'compact' }) {
   const [resumeData, setResumeData] = useState(initialResumeData)
-  const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const [activeStep, setActiveStep] = useState('template')
 
   const updatePersonalInfo = (field, value) => {
     setResumeData(prev => ({
@@ -156,74 +134,108 @@ function ResumeBuilder() {
     }))
   }
 
-  const handleTemplateSelect = (templateId) => {
-    setSelectedTemplate(templateId)
-    setActiveStep('personal')
+  const addTool = () => {
+    setResumeData(prev => ({
+      ...prev,
+      tools: [...prev.tools, { id: Date.now(), name: '' }]
+    }))
   }
 
-  const handleSkipTemplate = () => {
-    if (!selectedTemplate) {
-      setSelectedTemplate('minimal')
-    }
-    setActiveStep('personal')
+  const updateTool = (id, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      tools: prev.tools.map(tool =>
+        tool.id === id ? { ...tool, name: value } : tool
+      )
+    }))
   }
 
-  const handleTemplateStepClick = () => {
-    setActiveStep('template')
+  const removeTool = (id) => {
+    setResumeData(prev => ({
+      ...prev,
+      tools: prev.tools.filter(tool => tool.id !== id)
+    }))
   }
 
-  if (activeStep === 'template') {
-    return (
-      <TemplateSelector
-        selectedTemplate={selectedTemplate}
-        onSelectTemplate={handleTemplateSelect}
-        onSkip={handleSkipTemplate}
-      />
-    )
+  const addLanguage = () => {
+    setResumeData(prev => ({
+      ...prev,
+      languages: [...prev.languages, { id: Date.now(), name: '', proficiency: 'Fluent' }]
+    }))
+  }
+
+  const updateLanguage = (id, field, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      languages: prev.languages.map(lang =>
+        lang.id === id ? { ...lang, [field]: value } : lang
+      )
+    }))
+  }
+
+  const removeLanguage = (id) => {
+    setResumeData(prev => ({
+      ...prev,
+      languages: prev.languages.filter(lang => lang.id !== id)
+    }))
+  }
+
+  const addCertification = () => {
+    setResumeData(prev => ({
+      ...prev,
+      certifications: [...prev.certifications, { id: Date.now(), name: '', issuer: '', date: '' }]
+    }))
+  }
+
+  const updateCertification = (id, field, value) => {
+    setResumeData(prev => ({
+      ...prev,
+      certifications: prev.certifications.map(cert =>
+        cert.id === id ? { ...cert, [field]: value } : cert
+      )
+    }))
+  }
+
+  const removeCertification = (id) => {
+    setResumeData(prev => ({
+      ...prev,
+      certifications: prev.certifications.filter(cert => cert.id !== id)
+    }))
   }
 
   return (
-    <div className="resume-builder">
-      <div className="builder-layout">
-        <StepNavigation
-          activeStep={activeStep}
-          onStepChange={setActiveStep}
-          selectedTemplate={selectedTemplate}
-          onTemplateStepClick={handleTemplateStepClick}
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-screen">
+        <ResumeForm
+          resumeData={resumeData}
+          updatePersonalInfo={updatePersonalInfo}
+          updateSummary={updateSummary}
+          addExperience={addExperience}
+          updateExperience={updateExperience}
+          removeExperience={removeExperience}
+          addEducation={addEducation}
+          updateEducation={updateEducation}
+          removeEducation={removeEducation}
+          addSkill={addSkill}
+          updateSkill={updateSkill}
+          removeSkill={removeSkill}
+          addTool={addTool}
+          updateTool={updateTool}
+          removeTool={removeTool}
+          addLanguage={addLanguage}
+          updateLanguage={updateLanguage}
+          removeLanguage={removeLanguage}
+          addCertification={addCertification}
+          updateCertification={updateCertification}
+          removeCertification={removeCertification}
+          addProject={addProject}
+          updateProject={updateProject}
+          removeProject={removeProject}
         />
-        <div className={`builder-content ${activeStep === 'preview' ? 'preview-only' : ''}`}>
-          {activeStep === 'preview' ? (
-            <ResumePreview
-              resumeData={resumeData}
-              template={selectedTemplate || 'minimal'}
-            />
-          ) : (
-            <>
-              <ResumeForm
-                activeStep={activeStep}
-                resumeData={resumeData}
-                updatePersonalInfo={updatePersonalInfo}
-                updateSummary={updateSummary}
-                addExperience={addExperience}
-                updateExperience={updateExperience}
-                removeExperience={removeExperience}
-                addEducation={addEducation}
-                updateEducation={updateEducation}
-                removeEducation={removeEducation}
-                addSkill={addSkill}
-                updateSkill={updateSkill}
-                removeSkill={removeSkill}
-                addProject={addProject}
-                updateProject={updateProject}
-                removeProject={removeProject}
-              />
-              <ResumePreview
-                resumeData={resumeData}
-                template={selectedTemplate || 'minimal'}
-              />
-            </>
-          )}
-        </div>
+        <ResumePreview
+          resumeData={resumeData}
+          selectedTemplate={selectedTemplate}
+        />
       </div>
     </div>
   )

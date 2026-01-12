@@ -1,0 +1,20 @@
+export const initialResumeData = {
+  personalInfo: {
+    fullName: '',
+    title: '',
+    email: '',
+    phone: '',
+    location: '',
+    linkedin: '',
+    github: '',
+    website: '',
+  },
+  summary: '',
+  experience: [],
+  education: [],
+  skills: [],
+  tools: [],
+  languages: [],
+  certifications: [],
+  projects: [],
+}

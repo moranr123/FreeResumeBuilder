@@ -1,5 +1,3 @@
-import './Icon.css'
-
 const iconMap = {
   email: 'fi-rr-envelope',
   phone: 'fi-rr-phone-call',
@@ -8,6 +6,7 @@ const iconMap = {
   github: 'fi-brands-github',
   link: 'fi-rr-link',
   download: 'fi-rr-download',
+  template: 'fi-rr-layout-fluid',
   user: 'fi-rr-user',
   education: 'fi-rr-graduation-cap',
   briefcase: 'fi-rr-briefcase',
