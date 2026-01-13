@@ -186,10 +186,10 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                       <div className="w-full h-full flex flex-col leading-[1.15] flex-1" style={{ fontSize: getSize(5) }}>
                         <div className="font-bold text-center mb-0.5" style={{ fontSize: getSize(7) }}>Ronald Moran Jr</div>
                         <div className="text-gray-600 text-center mb-0.5" style={{ fontSize: getSize(4) }}>Software Engineer | email@example.com | +1 (555) 000-0000</div>
-                        <div className="my-0.5" style={{ height: '0.5px', backgroundColor: '#000000' }}></div>
+                        <div className="my-0.5" style={{ height: '0.2px', backgroundColor: '#000000' }}></div>
                         <div className="flex flex-col gap-0.5 flex-1 mt-0.5">
                           <div className="flex flex-col" style={{ margin: 0, padding: 0 }}>
-                            <div className="h-px" style={{ backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
+                            <div style={{ height: '0.2px', backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
                             <div className="font-bold uppercase" style={{ fontSize: getSize(4), margin: 0, paddingTop: '2px' }}>Summary</div>
                             <div style={{ paddingTop: '2px', margin: 0 }}>
                             <div className="text-gray-600" style={{ fontSize: getSize(3.5) }}>
@@ -201,7 +201,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                             </div>
                           </div>
                           <div className="flex flex-col" style={{ margin: 0, padding: 0 }}>
-                            <div className="h-px" style={{ backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
+                            <div style={{ height: '0.2px', backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
                             <div className="font-bold uppercase" style={{ fontSize: getSize(4), margin: 0, paddingTop: '2px' }}>Skills</div>
                             <div style={{ paddingTop: '2px', margin: 0 }}>
                               <div className="text-gray-600" style={{ fontSize: getSize(3.5) }}>
@@ -213,7 +213,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                             </div>
                           </div>
                           <div className="flex flex-col" style={{ margin: 0, padding: 0 }}>
-                            <div className="h-px" style={{ backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
+                            <div style={{ height: '0.2px', backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
                             <div className="font-bold uppercase" style={{ fontSize: getSize(4), margin: 0, paddingTop: '2px' }}>Experience</div>
                             <div style={{ paddingTop: '2px', margin: 0 }}>
                               <div className="font-semibold" style={{ fontSize: getSize(3.5) }}>Senior Software Engineer</div>
@@ -235,7 +235,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                             </div>
                           </div>
                           <div className="flex flex-col" style={{ margin: 0, padding: 0 }}>
-                            <div className="h-px" style={{ backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
+                            <div style={{ height: '0.2px', backgroundColor: '#000000', margin: 0, padding: 0 }}></div>
                             <div className="font-bold uppercase" style={{ fontSize: getSize(4), margin: 0, paddingTop: '2px' }}>Education</div>
                             <div style={{ paddingTop: '2px', margin: 0 }}>
                               <div className="font-semibold" style={{ fontSize: getSize(3.5) }}>BS Computer Science</div>
