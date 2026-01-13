@@ -5,9 +5,18 @@ import Icon from '../../../components/common/Icon'
 import { fonts } from '../../../constants/fonts'
 import { getColorScheme } from '../../../constants/colors'
 
-function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont = 'inter', selectedColor = 'black', themeColor = '#F2F2F2', onDownloadReady }) {
+function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont = 'inter', selectedColor = 'black', themeColor = '#F2F2F2', onDownloadReady, inModal = false }) {
   const resumeRef = useRef(null)
   const colorScheme = getColorScheme(selectedColor)
+
+  // Text flow normalization styles - match Word/Google Docs rendering
+  const textFlowStyles = {
+    whiteSpace: 'normal',
+    wordBreak: 'normal',
+    overflowWrap: 'break-word',
+    letterSpacing: 'normal',
+    textAlign: 'left'
+  }
 
   const downloadPDF = async () => {
     if (!resumeRef.current) return
@@ -134,7 +143,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
     // US Letter: 8.5" x 11" = 215.9mm x 279.4mm (aspect ratio 1:1.294)
     // Maintaining true physical dimensions for PDF export
     // Reduced padding to maximize content density
-    const base = "bg-white w-[215.9mm] h-[279.4mm] font-sans text-gray-900 overflow-hidden"
+    // For modal display, use pixel-based dimensions that scale better
+    const base = inModal 
+      ? "bg-white font-sans text-gray-900 overflow-hidden"
+      : "bg-white w-[215.9mm] h-[279.4mm] font-sans text-gray-900 overflow-hidden"
     const styles = {
       compact: `${base} text-[9pt] leading-[1.28] p-[8mm_10mm]`,
       modern: `${base} text-[9.5pt] leading-[1.35] p-[9mm_11mm]`,
@@ -173,10 +185,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
       'with-image': 'mb-3 pb-2',
     }
     const nameStyles = {
-      compact: 'text-[17pt] font-bold tracking-wider mb-0.5 text-black uppercase',
-      modern: 'text-[18pt] font-bold tracking-wide mb-1 text-black',
-      classic: 'text-[18pt] font-bold tracking-normal mb-1 text-black',
-      minimal: 'text-[16pt] font-semibold tracking-wide mb-0.5 text-black',
+      compact: 'text-[17pt] font-bold mb-0.5 text-black uppercase',
+      modern: 'text-[18pt] font-bold mb-1 text-black',
+      classic: 'text-[18pt] font-bold mb-1 text-black',
+      minimal: 'text-[16pt] font-semibold mb-0.5 text-black',
       corporate: 'text-[22pt] font-bold mb-1 text-black',
       'with-image': 'text-[20pt] font-bold mb-1 text-black',
     }
@@ -202,21 +214,42 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
       <header className={headerStyles[selectedTemplate] || headerStyles.compact}>
         <h1 
           className={nameStyles[selectedTemplate] || nameStyles.compact}
-          style={{ color: colorScheme.colors.primary }}
+          style={{ 
+            color: colorScheme.colors.primary,
+            whiteSpace: 'normal',
+            wordBreak: 'normal',
+            overflowWrap: 'break-word',
+            letterSpacing: 'normal',
+            textAlign: 'left'
+          }}
         >
           {resumeData.personalInfo.fullName || 'Your Name'}
         </h1>
         {resumeData.personalInfo.title && (
           <p 
             className={titleStyles[selectedTemplate] || titleStyles.compact}
-            style={{ color: colorScheme.colors.tertiary }}
+            style={{ 
+              color: colorScheme.colors.tertiary,
+              whiteSpace: 'normal',
+              wordBreak: 'normal',
+              overflowWrap: 'break-word',
+              letterSpacing: 'normal',
+              textAlign: 'left'
+            }}
           >
             {resumeData.personalInfo.title}
           </p>
         )}
         <div 
           className={contactStyles[selectedTemplate] || contactStyles.compact}
-          style={{ color: colorScheme.colors.tertiary }}
+          style={{ 
+            color: colorScheme.colors.tertiary,
+            whiteSpace: 'normal',
+            wordBreak: 'normal',
+            overflowWrap: 'break-word',
+            letterSpacing: 'normal',
+            textAlign: 'left'
+          }}
         >
           {resumeData.personalInfo.email && (
             <span className="inline-block">{resumeData.personalInfo.email}</span>
@@ -269,12 +302,12 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
 
   const renderSectionHeader = (title) => {
     const headerStyles = {
-      compact: 'text-[9.5pt] font-bold uppercase tracking-wide mb-0.5',
-      modern: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5',
-      classic: 'text-[10pt] font-bold uppercase tracking-wide mb-0.5',
-      minimal: 'text-[9pt] font-semibold uppercase tracking-wide mb-0.5',
-      corporate: 'text-[10pt] font-bold uppercase tracking-[0.1em] mb-1.5',
-      'with-image': 'text-[10pt] font-bold uppercase tracking-wide mb-1',
+      compact: 'text-[9.5pt] font-bold uppercase mb-0.5',
+      modern: 'text-[10pt] font-bold uppercase mb-0.5',
+      classic: 'text-[10pt] font-bold uppercase mb-0.5',
+      minimal: 'text-[9pt] font-semibold uppercase mb-0.5',
+      corporate: 'text-[10pt] font-bold uppercase mb-1.5',
+      'with-image': 'text-[10pt] font-bold uppercase mb-1',
     }
     const headerColor = selectedTemplate === 'corporate' 
       ? themeColor 
@@ -283,7 +316,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
       <>
         <h2 
           className={headerStyles[selectedTemplate] || headerStyles.compact} 
-          style={{ fontVariant: 'small-caps', color: headerColor }}
+          style={{ 
+            fontVariant: 'small-caps', 
+            color: headerColor,
+            whiteSpace: 'normal',
+            wordBreak: 'normal',
+            overflowWrap: 'break-word',
+            letterSpacing: 'normal',
+            textAlign: 'left'
+          }}
         >
           {title}
         </h2>
@@ -293,9 +334,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
   }
 
   const renderTwoColumnLayout = () => (
-    <div className={`flex gap-2.5 mt-2`}>
-            {/* Left Column - 30% */}
-            <aside className="w-[30%] flex-shrink-0">
+    <div className={`flex gap-2.5 mt-2`} style={{ overflow: 'hidden' }}>
+            {/* Left Column - 30% - Fixed width in print units */}
+            <aside className="flex-shrink-0" style={{ width: '30%', minWidth: 0, overflow: 'hidden' }}>
               {/* Skills */}
               {(resumeData.skills.length > 0 || true) && (
                 <section className="mb-1.5">
@@ -303,20 +344,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                   <ul className="list-none p-0 m-0">
                     {resumeData.skills.length > 0 ? (
                       resumeData.skills.map(skill => (
-                        <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary }}>
+                        <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                           {skill.name}
                         </li>
                       ))
                     ) : (
                       <>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">JavaScript</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Python</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">TypeScript</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">React</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Node.js</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">SQL</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Problem Solving</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">System Design</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>JavaScript</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Python</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>TypeScript</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>React</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Node.js</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>SQL</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Problem Solving</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>System Design</li>
                       </>
                     )}
                   </ul>
@@ -330,19 +371,19 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                   <ul className="list-none p-0 m-0">
                     {resumeData.tools.length > 0 ? (
                       resumeData.tools.map(tool => (
-                        <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary }}>
+                        <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                           {tool.name}
                         </li>
                       ))
                     ) : (
                       <>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Git</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Docker</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">AWS</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">PostgreSQL</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">MongoDB</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Jest</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic">Webpack</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Git</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Docker</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>AWS</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>PostgreSQL</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>MongoDB</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Jest</li>
+                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Webpack</li>
                       </>
                     )}
                   </ul>
@@ -356,24 +397,24 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                   <ul className="list-none p-0 m-0">
                     {resumeData.languages.length > 0 ? (
                       resumeData.languages.map(lang => (
-                        <li key={lang.id} className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]">
-                          <span className="font-medium" style={{ color: colorScheme.colors.primary }}>{lang.name}</span>
-                          <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{lang.proficiency}</span>
+                        <li key={lang.id} className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                          <span className="font-medium" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{lang.name}</span>
+                          <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{lang.proficiency}</span>
                         </li>
                       ))
                     ) : (
                       <>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]">
-                          <span className="font-medium text-gray-400 italic">English</span>
-                          <span className="text-[7.5pt] text-gray-400 italic">Native</span>
+                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>English</span>
+                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Native</span>
                         </li>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]">
-                          <span className="font-medium text-gray-400 italic">Spanish</span>
-                          <span className="text-[7.5pt] text-gray-400 italic">Fluent</span>
+                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>Spanish</span>
+                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Fluent</span>
                         </li>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]">
-                          <span className="font-medium text-gray-400 italic">French</span>
-                          <span className="text-[7.5pt] text-gray-400 italic">Intermediate</span>
+                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>French</span>
+                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Intermediate</span>
                         </li>
                       </>
                     )}
@@ -389,9 +430,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                     {resumeData.certifications.length > 0 ? (
                       resumeData.certifications.map(cert => (
                         <div key={cert.id} className="leading-[1.25]">
-                          <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary }}>{cert.name}</div>
-                          {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary }}>{cert.issuer}</div>}
-                          {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{cert.date}</div>}
+                          <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{cert.name}</div>
+                          {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{cert.issuer}</div>}
+                          {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{cert.date}</div>}
                         </div>
                       ))
                     ) : (
@@ -413,15 +454,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
               )}
             </aside>
 
-            {/* Right Column - 70% */}
-            <main className="w-[70%] flex-grow">
+            {/* Right Column - 70% - Fixed width in print units */}
+            <main className="flex-grow" style={{ width: '70%', minWidth: 0, overflow: 'hidden' }}>
               {/* Professional Summary */}
               {(resumeData.summary || true) && (
                 <section className="mb-1.5">
                   {renderSectionHeader('Summary')}
-                  <p className="m-0 text-[8.5pt] leading-[1.3] text-justify">
+                  <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
                     {resumeData.summary ? (
-                      <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
+                      <span style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>{resumeData.summary}</span>
                     ) : (
                       <span className="text-gray-400 italic">
                         Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
@@ -441,16 +482,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                       <div key={exp.id} className="break-inside-avoid">
                         <div className="flex justify-between mb-0.5">
                           <div className="flex-1">
-                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
+                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                               {exp.position || 'Position'}
                             </h3>
-                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor }}>
+                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor, ...textFlowStyles }}>
                               {exp.company || 'Company'}
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
-                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
+                            {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{exp.location}</div>}
+                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
                               {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                             </div>
                           </div>
@@ -487,23 +528,23 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                           </div>
                         </div>
                         <ul className="list-none p-0 m-0 mt-0">
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Led development of microservices architecture serving 2M+ daily active users, reducing latency by 40%
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Architected and implemented real-time data processing pipeline handling 50K requests/second
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Mentored team of 5 junior engineers, establishing code review practices and technical standards
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Optimized database queries and caching strategies, improving API response time by 60%
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Collaborated with product and design teams to deliver features increasing user engagement by 25%
                           </li>
@@ -527,19 +568,19 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                           </div>
                         </div>
                         <ul className="list-none p-0 m-0 mt-0">
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Developed full-stack web applications using React, Node.js, and PostgreSQL
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Built RESTful APIs and GraphQL endpoints supporting mobile and web clients
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Implemented automated testing suite achieving 85% code coverage, reducing production bugs by 50%
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Deployed applications on AWS using Docker and Kubernetes, ensuring 99.9% uptime
                           </li>
@@ -560,17 +601,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                       resumeData.projects.map(project => (
                       <div key={project.id} className="break-inside-avoid">
                         <div className="flex justify-between items-baseline mb-0.5">
-                          <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
+                          <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                             {project.name || 'Project Name'}
                           </h3>
                           {project.technologies && (
-                            <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
+                            <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{project.technologies}</span>
                           )}
                         </div>
                         {project.description && (
                           <ul className="list-none p-0 m-0 mt-0">
                             {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                              <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                              <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                                 <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                                 {line.trim().replace(/^[•\-]\s*/, '')}
                               </li>
@@ -593,15 +634,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                           <span className="text-[7.5pt] text-gray-400 italic">React, Node.js, MongoDB</span>
                         </div>
                         <ul className="list-none p-0 m-0 mt-0">
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Built scalable e-commerce platform with payment integration and inventory management
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Implemented real-time order tracking and notification system using WebSockets
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Optimized database queries and caching, reducing page load time by 45%
                           </li>
@@ -618,11 +659,11 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                           <span className="text-[7.5pt] text-gray-400 italic">Vue.js, Express, PostgreSQL</span>
                         </div>
                         <ul className="list-none p-0 m-0 mt-0">
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Developed collaborative task management application with real-time updates
                           </li>
-                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic">
+                          <li className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28] text-gray-400 italic" style={textFlowStyles}>
                             <span className="absolute left-1 text-gray-400 font-bold text-[7pt]">•</span>
                             Designed RESTful API architecture supporting 10K+ concurrent users
                           </li>
@@ -647,20 +688,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                       <div key={edu.id} className="break-inside-avoid">
                         <div className="flex justify-between mb-0">
                           <div className="flex-1">
-                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
+                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                               {edu.degree || 'Degree'}
                             </h3>
-                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor }}>
+                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor, ...textFlowStyles }}>
                               {edu.school || 'School'}
                             </div>
-                            {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
+                            {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{edu.field}</div>}
                           </div>
                           <div className="text-right flex-shrink-0">
-                            {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{edu.location}</div>}
-                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
+                            {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{edu.location}</div>}
+                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
                               {edu.startDate} - {edu.endDate}
                             </div>
-                            {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary }}>GPA: {edu.gpa}</div>}
+                            {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>GPA: {edu.gpa}</div>}
                           </div>
                         </div>
                       </div>
@@ -695,12 +736,12 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
   )
 
   const renderSingleColumnLayout = () => (
-    <div className="mt-1.5">
+    <div className="mt-1.5" style={{ overflow: 'hidden' }}>
       {/* Professional Summary */}
       {(resumeData.summary || true) && (
         <section className="mb-1.5">
           {renderSectionHeader('Summary')}
-          <p className="m-0 text-[8.5pt] leading-[1.3] text-justify">
+          <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
             {resumeData.summary ? (
               <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
             ) : (
@@ -722,24 +763,24 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                 <div key={exp.id} className="break-inside-avoid">
                   <div className="flex justify-between mb-0.5">
                     <div className="flex-1">
-                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
-                        {exp.position || 'Position'}
-                      </h3>
-                      <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor }}>
-                        {exp.company || 'Company'}
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
-                      <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
-                        {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
-                      </div>
+                            <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
+                              {exp.position || 'Position'}
+                            </h3>
+                            <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor, ...textFlowStyles }}>
+                              {exp.company || 'Company'}
+                            </div>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{exp.location}</div>}
+                            <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
+                              {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                            </div>
                     </div>
                   </div>
                   {exp.description && (
                     <ul className="list-none p-0 m-0 mt-0">
                       {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                           <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                           {line.trim().replace(/^[•\-]\s*/, '')}
                         </li>
@@ -841,17 +882,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
               resumeData.projects.map(project => (
                 <div key={project.id} className="break-inside-avoid">
                   <div className="flex justify-between items-baseline mb-0.5">
-                    <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
+                    <h3 className="text-[9.5pt] font-bold m-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                       {project.name || 'Project Name'}
                     </h3>
                     {project.technologies && (
-                      <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
+                      <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{project.technologies}</span>
                     )}
                   </div>
                   {project.description && (
                     <ul className="list-none p-0 m-0 mt-0">
                       {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary }}>
+                        <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.28]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                           <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                           {line.trim().replace(/^[•\-]\s*/, '')}
                         </li>
@@ -928,20 +969,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                 <div key={edu.id} className="break-inside-avoid">
                   <div className="flex justify-between mb-0">
                     <div className="flex-1">
-                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary }}>
+                      <h3 className="text-[9.5pt] font-bold m-0 mb-0 leading-[1.2]" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                         {edu.degree || 'Degree'}
                       </h3>
-                      <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor }}>
+                      <div className="text-[9pt] font-semibold mb-0 leading-[1.2]" style={{ color: themeColor, ...textFlowStyles }}>
                         {edu.school || 'School'}
                       </div>
-                      {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
+                      {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{edu.field}</div>}
                     </div>
                     <div className="text-right flex-shrink-0">
-                      {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{edu.location}</div>}
-                      <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
+                      {edu.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{edu.location}</div>}
+                      <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
                         {edu.startDate} - {edu.endDate}
                       </div>
-                      {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary }}>GPA: {edu.gpa}</div>}
+                      {edu.gpa && <div className="text-[8pt] mt-0" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>GPA: {edu.gpa}</div>}
                     </div>
                   </div>
                 </div>
@@ -1081,9 +1122,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
   )
 
   const renderCorporateLayout = () => (
-    <div className="flex gap-6 mt-3">
-      {/* Left Column - Education and Skills */}
-      <aside className="w-[35%] flex-shrink-0">
+    <div className="flex gap-6 mt-3" style={{ overflow: 'hidden' }}>
+      {/* Left Column - Education and Skills - Fixed width in print units */}
+      <aside className="flex-shrink-0" style={{ width: '35%', minWidth: 0, overflow: 'hidden' }}>
         {/* Education */}
         {(resumeData.education.length > 0 || true) && (
           <section className="mb-4">
@@ -1092,15 +1133,15 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-1">
-                    <h3 className="text-[10pt] font-semibold mb-0.5 leading-tight" style={{ color: colorScheme.colors.primary }}>
+                    <h3 className="text-[10pt] font-semibold mb-0.5 leading-tight" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                       {edu.degree || 'Degree'}
                     </h3>
-                    <div className="text-[9pt] mb-0.5" style={{ color: themeColor }}>{edu.school || 'School'}</div>
-                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
-                    <div className="text-[8.5pt] mt-0.5" style={{ color: colorScheme.colors.muted }}>
+                    <div className="text-[9pt] mb-0.5" style={{ color: themeColor, ...textFlowStyles }}>{edu.school || 'School'}</div>
+                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{edu.field}</div>}
+                    <div className="text-[8.5pt] mt-0.5" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>
                       {edu.startDate} - {edu.endDate}
                     </div>
-                    {edu.gpa && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted }}>GPA: {edu.gpa}</div>}
+                    {edu.gpa && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>GPA: {edu.gpa}</div>}
                   </div>
                 ))
               ) : (
@@ -1124,18 +1165,18 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
             <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
-                  <li key={skill.id} className="py-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary }}>
+                  <li key={skill.id} className="py-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                     • {skill.name}
                   </li>
                 ))
               ) : (
                 <>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• JavaScript</li>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• Python</li>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• React</li>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• Node.js</li>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• SQL</li>
-                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic">• System Design</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• JavaScript</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• Python</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• React</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• Node.js</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• SQL</li>
+                  <li className="py-0.5 text-[9pt] leading-[1.4] text-gray-400 italic" style={textFlowStyles}>• System Design</li>
                 </>
               )}
             </ul>
@@ -1143,13 +1184,13 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
         )}
       </aside>
 
-      {/* Right Column - Summary and Work History */}
-      <main className="w-[65%] flex-grow">
+      {/* Right Column - Summary and Work History - Fixed width in print units */}
+      <main className="flex-grow" style={{ width: '65%', minWidth: 0, overflow: 'hidden' }}>
         {/* Professional Summary */}
         {(resumeData.summary || true) && (
           <section className="mb-4">
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9.5pt] leading-[1.5] text-justify" style={{ color: colorScheme.colors.secondary }}>
+            <p className="m-0 text-[9.5pt] leading-[1.5]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
@@ -1171,16 +1212,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                   <div key={exp.id} className="mb-1">
                     <div className="flex justify-between items-start mb-1">
                       <div className="flex-1">
-                        <h3 className="text-[10.5pt] font-semibold mb-0.5" style={{ color: colorScheme.colors.primary }}>
+                        <h3 className="text-[10.5pt] font-semibold mb-0.5" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                           {exp.position || 'Position'}
                         </h3>
-                        <div className="text-[9.5pt] font-medium" style={{ color: themeColor }}>
+                        <div className="text-[9.5pt] font-medium" style={{ color: themeColor, ...textFlowStyles }}>
                           {exp.company || 'Company'}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        {exp.location && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
-                        <div className="text-[8.5pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
+                        {exp.location && <div className="text-[8.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{exp.location}</div>}
+                        <div className="text-[8.5pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
                           {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                         </div>
                       </div>
@@ -1188,7 +1229,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                     {exp.description && (
                       <ul className="list-none p-0 m-0 mt-1">
                         {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-4 mb-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary }}>
+                          <li key={idx} className="relative pl-4 mb-0.5 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                             <span className="absolute left-0" style={{ color: themeColor }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
@@ -1269,9 +1310,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
   )
 
   const renderImageLayout = () => (
-    <div className="flex gap-5 mt-2">
-      {/* Left Column - Photo and Sidebar Info */}
-      <aside className="w-[28%] flex-shrink-0">
+    <div className="flex gap-5 mt-2" style={{ overflow: 'hidden' }}>
+      {/* Left Column - Photo and Sidebar Info - Fixed width in print units */}
+      <aside className="flex-shrink-0" style={{ width: '28%', minWidth: 0, overflow: 'hidden' }}>
         {/* Profile Photo */}
         {(resumeData.personalInfo.profilePhoto || true) && (
           <div className="mb-3">
@@ -1296,17 +1337,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
             <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
-                  <li key={skill.id} className="py-0.5 text-[8.5pt] leading-[1.3]" style={{ color: colorScheme.colors.secondary }}>
+                  <li key={skill.id} className="py-0.5 text-[8.5pt] leading-[1.3]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                     {skill.name}
                   </li>
                 ))
               ) : (
                 <>
-                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic">JavaScript</li>
-                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic">Python</li>
-                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic">React</li>
-                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic">Node.js</li>
-                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic">SQL</li>
+                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>JavaScript</li>
+                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>Python</li>
+                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>React</li>
+                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>Node.js</li>
+                  <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>SQL</li>
                 </>
               )}
             </ul>
@@ -1320,20 +1361,20 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
             <ul className="list-none p-0 m-0">
               {resumeData.languages.length > 0 ? (
                 resumeData.languages.map(lang => (
-                  <li key={lang.id} className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]">
-                    <span className="font-medium" style={{ color: colorScheme.colors.primary }}>{lang.name}</span>
-                    <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted }}>{lang.proficiency}</span>
+                  <li key={lang.id} className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]" style={textFlowStyles}>
+                    <span className="font-medium" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{lang.name}</span>
+                    <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{lang.proficiency}</span>
                   </li>
                 ))
               ) : (
                 <>
-                  <li className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]">
-                    <span className="font-medium text-gray-400 italic">English</span>
-                    <span className="text-[7.5pt] text-gray-400 italic">Native</span>
+                  <li className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]" style={textFlowStyles}>
+                    <span className="font-medium text-gray-400 italic" style={textFlowStyles}>English</span>
+                    <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Native</span>
                   </li>
-                  <li className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]">
-                    <span className="font-medium text-gray-400 italic">Spanish</span>
-                    <span className="text-[7.5pt] text-gray-400 italic">Fluent</span>
+                  <li className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]" style={textFlowStyles}>
+                    <span className="font-medium text-gray-400 italic" style={textFlowStyles}>Spanish</span>
+                    <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Fluent</span>
                   </li>
                 </>
               )}
@@ -1366,13 +1407,13 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
         )}
       </aside>
 
-      {/* Right Column - Main Content */}
-      <main className="w-[72%] flex-grow">
+      {/* Right Column - Main Content - Fixed width in print units */}
+      <main className="flex-grow" style={{ width: '72%', minWidth: 0, overflow: 'hidden' }}>
         {/* Professional Summary */}
         {(resumeData.summary || true) && (
           <section className="mb-3">
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9pt] leading-[1.4] text-justify" style={{ color: colorScheme.colors.secondary }}>
+            <p className="m-0 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
@@ -1394,16 +1435,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                   <div key={exp.id} className="mb-1">
                     <div className="flex justify-between items-start mb-0.5">
                       <div className="flex-1">
-                        <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary }}>
+                        <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                           {exp.position || 'Position'}
                         </h3>
-                        <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: themeColor }}>
+                        <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: themeColor, ...textFlowStyles }}>
                           {exp.company || 'Company'}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted }}>{exp.location}</div>}
-                        <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary }}>
+                        {exp.location && <div className="text-[8pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{exp.location}</div>}
+                        <div className="text-[8pt] font-medium" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>
                           {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
                         </div>
                       </div>
@@ -1411,7 +1452,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                     {exp.description && (
                       <ul className="list-none p-0 m-0 mt-0.5">
                         {exp.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary }}>
+                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                             <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
@@ -1468,14 +1509,14 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-0">
-                    <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary }}>
+                    <h3 className="text-[10pt] font-bold mb-0 leading-tight" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                       {edu.degree || 'Degree'}
                     </h3>
-                    <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: themeColor }}>
+                    <div className="text-[9.5pt] font-semibold mb-0 leading-tight" style={{ color: themeColor, ...textFlowStyles }}>
                       {edu.school || 'School'}
                     </div>
-                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary }}>{edu.field}</div>}
-                    <div className="text-[8pt] mt-0.5" style={{ color: colorScheme.colors.muted }}>
+                    {edu.field && <div className="text-[8.5pt] italic" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{edu.field}</div>}
+                    <div className="text-[8pt] mt-0.5" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>
                       {edu.startDate} - {edu.endDate}
                     </div>
                   </div>
@@ -1505,17 +1546,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
                 resumeData.projects.map(project => (
                   <div key={project.id} className="mb-0">
                     <div className="flex justify-between items-baseline mb-0.5">
-                      <h3 className="text-[10pt] font-bold leading-tight" style={{ color: colorScheme.colors.primary }}>
+                      <h3 className="text-[10pt] font-bold leading-tight" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>
                         {project.name || 'Project Name'}
                       </h3>
                       {project.technologies && (
-                        <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted }}>{project.technologies}</span>
+                        <span className="text-[7.5pt] italic" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{project.technologies}</span>
                       )}
                     </div>
                     {project.description && (
                       <ul className="list-none p-0 m-0 mt-0">
                         {project.description.split('\n').filter(line => line.trim()).map((line, idx) => (
-                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary }}>
+                          <li key={idx} className="relative pl-3 mb-0 text-[8.5pt] leading-[1.35]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
                             <span className="absolute left-1 font-bold text-[7pt]" style={{ color: colorScheme.colors.light }}>•</span>
                             {line.trim().replace(/^[•\-]\s*/, '')}
                           </li>
@@ -1547,38 +1588,56 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
     </div>
   )
 
+  const resumeContent = (
+    <div 
+      ref={resumeRef} 
+      data-resume-content
+      className={getTemplateClasses()}
+      style={{ 
+        fontFamily: fonts.find(f => f.id === selectedFont)?.family || fonts[0].family,
+        boxSizing: 'border-box',
+        margin: 0,
+        width: inModal ? '816px' : undefined, // US Letter width in pixels at 96 DPI
+        height: inModal ? '1056px' : undefined, // US Letter height in pixels at 96 DPI
+        aspectRatio: inModal ? '8.5 / 11' : undefined,
+        // Text flow normalization - match Word/Google Docs rendering
+        whiteSpace: 'normal',
+        wordBreak: 'normal',
+        overflowWrap: 'break-word',
+        letterSpacing: 'normal',
+        textAlign: 'left',
+        // Prevent column overflow
+        overflow: 'hidden',
+        '--color-primary': colorScheme.colors.primary,
+        '--color-secondary': colorScheme.colors.secondary,
+        '--color-tertiary': colorScheme.colors.tertiary,
+        '--color-accent': themeColor,
+        '--color-muted': colorScheme.colors.muted,
+        '--color-light': colorScheme.colors.light,
+      }}
+    >
+      {renderHeader()}
+      {selectedTemplate === 'classic' 
+        ? renderSingleColumnLayout() 
+        : selectedTemplate === 'corporate'
+        ? renderCorporateLayout()
+        : selectedTemplate === 'with-image'
+        ? renderImageLayout()
+        : renderTwoColumnLayout()}
+    </div>
+  )
+
+  if (inModal) {
+    return resumeContent
+  }
+
   return (
     <div className="h-full min-h-[calc(100vh-57px)] sm:min-h-[calc(100vh-65px)] overflow-hidden flex flex-col justify-start items-center pt-6 sm:pt-8 md:pt-10 hidden lg:flex" data-resume-preview>
       {/* Scaled preview wrapper - maintains true US Letter aspect ratio (8.5:11) */}
       <div 
         className="scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.75] origin-top"
       >
-        {/* Actual resume content - true physical dimensions (215.9mm x 279.4mm = US Letter) */}
-        <div 
-          ref={resumeRef} 
-          data-resume-content
-          className={getTemplateClasses()}
-          style={{ 
-            fontFamily: fonts.find(f => f.id === selectedFont)?.family || fonts[0].family,
-            boxSizing: 'border-box',
-            margin: 0,
-            '--color-primary': colorScheme.colors.primary,
-            '--color-secondary': colorScheme.colors.secondary,
-            '--color-tertiary': colorScheme.colors.tertiary,
-            '--color-accent': themeColor,
-            '--color-muted': colorScheme.colors.muted,
-            '--color-light': colorScheme.colors.light,
-          }}
-        >
-          {renderHeader()}
-          {selectedTemplate === 'classic' 
-            ? renderSingleColumnLayout() 
-            : selectedTemplate === 'corporate'
-            ? renderCorporateLayout()
-            : selectedTemplate === 'with-image'
-            ? renderImageLayout()
-            : renderTwoColumnLayout()}
-        </div>
+        {resumeContent}
       </div>
     </div>
   )

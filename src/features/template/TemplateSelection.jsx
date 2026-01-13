@@ -41,7 +41,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
             >
               {/* Preview - US Letter aspect ratio (1:1.294) with padding for shadow breathing room */}
               <div 
-                className="relative bg-gray-50 p-2 sm:p-3 md:p-4 flex items-center justify-center"
+                className="relative bg-gray-50 p-3 sm:p-4 md:p-5 flex items-center justify-center"
                 onMouseEnter={() => setHoveredTemplate(template.id)}
                 onMouseLeave={() => setHoveredTemplate(null)}
               >
@@ -57,23 +57,21 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                     </button>
                   </div>
                 )}
-                {/* Paper frame - US Letter: 8.5" x 11" (aspect ratio 1:1.294) */}
+                {/* Paper frame - US Letter: 8.5" x 11" (aspect ratio 1:1.294) - True physical paper representation */}
                 <div 
-                  className="relative bg-white shadow-lg w-full max-w-[140px] sm:max-w-[160px] md:max-w-[180px] lg:max-w-[200px]"
+                  className="relative bg-white w-full max-w-[140px] sm:max-w-[160px] md:max-w-[180px] lg:max-w-[200px]"
                   style={{
-                    aspectRatio: '8.5 / 11', // US Letter aspect ratio
-                    border: '1px solid #E5E7EB',
+                    aspectRatio: '8.5 / 11', // US Letter aspect ratio (exact)
+                    border: '0.5px solid #D1D5DB', // Thin light-gray page border
+                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)', // Soft subtle shadow for paper lift
                   }}
                 >
-                  {/* Thin page border lines */}
-                  <div className="absolute inset-0 border border-gray-300 pointer-events-none" style={{ borderWidth: '0.5px' }}></div>
-                  
-                  {/* Resume content - scaled to fit paper frame */}
-                  <div className="w-full h-full p-2 overflow-hidden" style={{ boxSizing: 'border-box' }}>
+                  {/* Resume content - scaled to fit paper frame and fill vertically */}
+                  <div className="w-full h-full p-1.5 sm:p-2 overflow-hidden flex flex-col" style={{ boxSizing: 'border-box' }}>
                   {template.id === 'compact' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15]">
+                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15] flex-1">
                         <div className="text-[7px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                         <div className="text-[4px] text-gray-600 text-center mb-0.5">Software Engineer | email@example.com | +1 (555) 000-0000</div>
                         <div className="h-px my-0.5" style={{ backgroundColor: previewColor }}></div>
@@ -139,7 +137,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   {template.id === 'modern' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5.5px] leading-[1.2]">
+                      <div className="w-full h-full flex flex-col text-[5.5px] leading-[1.2] flex-1">
                         <div className="text-[8px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                         <div className="text-[4.5px] text-gray-600 text-center mb-1">Software Engineer | email@example.com | +1 (555) 000-0000</div>
                         <div className="h-px my-0.5" style={{ backgroundColor: previewColor }}></div>
@@ -202,7 +200,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   {template.id === 'classic' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15]">
+                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15] flex-1">
                         <div className="text-[7px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                         <div className="text-[4px] text-gray-600 text-center mb-0.5">Software Engineer | email@example.com | +1 (555) 000-0000</div>
                         <div className="h-px my-0.5" style={{ backgroundColor: previewColor }}></div>
@@ -247,7 +245,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   {template.id === 'minimal' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15]">
+                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15] flex-1">
                         <div className="text-[7px] font-semibold text-center mb-0.5">Ronald Moran Jr</div>
                         <div className="text-[4px] text-gray-600 text-center mb-0.5">Software Engineer | email@example.com | +1 (555) 000-0000</div>
                         <div className="h-0.5 my-0.5" style={{ backgroundColor: previewColor }}></div>
@@ -311,7 +309,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   {template.id === 'corporate' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15]">
+                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15] flex-1">
                         <div className="text-[8px] font-bold mb-0.5">Ronald Moran Jr</div>
                         <div className="text-[4.5px] text-gray-700 mb-0.5">Software Engineer | email@example.com | +1 (555) 000-0000</div>
                         <div className="h-0.5 w-1/4 mb-0.5" style={{ backgroundColor: previewColor }}></div>
@@ -375,7 +373,7 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   {template.id === 'with-image' && (() => {
                     const previewColor = getPreviewColor(template.id)
                     return (
-                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15]">
+                      <div className="w-full h-full flex flex-col text-[5px] leading-[1.15] flex-1">
                         <div className="mb-1 pb-0.5 border-b" style={{ borderColor: previewColor }}>
                           <div className="text-[7px] font-bold mb-0.5">Ronald Moran Jr</div>
                           <div className="text-[4px] text-gray-600 mb-0.5">Software Engineer</div>

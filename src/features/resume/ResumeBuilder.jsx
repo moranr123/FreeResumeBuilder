@@ -41,6 +41,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
   const [showTemplateModal, setShowTemplateModal] = useState(false)
   const [showFontModal, setShowFontModal] = useState(false)
   const [showColorModal, setShowColorModal] = useState(false)
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
   const downloadPDFRef = useRef(null)
@@ -333,6 +334,17 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
       {/* Header with Progress Bar */}
       <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-3 sm:px-4 md:px-6 py-2 sm:py-3 z-10">
         <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+          {/* Hamburger Menu Button - Mobile Only */}
+          <button
+            onClick={() => setShowSidebar(true)}
+            className="lg:hidden flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 p-1.5"
+            aria-label="Open menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
           {/* Progress Bar - Centered */}
           <div className="flex-1 flex justify-center min-w-0">
             <div className="max-w-[200px] sm:max-w-[280px] md:max-w-md w-full">
@@ -375,15 +387,14 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
             </div>
           </div>
 
-          {/* Hamburger Menu Button - Mobile Only */}
+          {/* Preview Button - Mobile Only */}
           <button
-            onClick={() => setShowSidebar(true)}
-            className="lg:hidden flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 p-1.5"
-            aria-label="Open menu"
+            onClick={() => setShowPreviewModal(true)}
+            className="lg:hidden flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 p-1.5"
+            aria-label="Show preview"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Icon name="preview" className="text-base" />
+            <span className="text-xs font-medium hidden sm:inline">Preview</span>
           </button>
 
           {/* Font, Color and Template Buttons - Desktop Only */}
@@ -426,8 +437,8 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
           onClick={() => setShowSidebar(false)}
         />
         {/* Sidebar */}
-        <div className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-out lg:hidden ${
-          showSidebar ? 'translate-x-0' : 'translate-x-full'
+        <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-out lg:hidden ${
+          showSidebar ? 'translate-x-0' : '-translate-x-full'
         }`}>
           <div className="flex flex-col h-full">
             {/* Sidebar Header */}
@@ -453,7 +464,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                     setShowSidebar(false)
                   }}
                   className={`flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-all duration-200 ${
-                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   }`}
                   style={{ transitionDelay: showSidebar ? '0.1s' : '0s' }}
                 >
@@ -470,7 +481,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                     setShowSidebar(false)
                   }}
                   className={`flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-all duration-200 ${
-                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   }`}
                   style={{ transitionDelay: showSidebar ? '0.15s' : '0s' }}
                 >
@@ -489,7 +500,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                     setShowSidebar(false)
                   }}
                   className={`flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-all duration-200 ${
-                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                    showSidebar ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   }`}
                   style={{ transitionDelay: showSidebar ? '0.2s' : '0s' }}
                 >
@@ -506,28 +517,6 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
       </>
 
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[calc(100vh-57px)] sm:min-h-[calc(100vh-65px)] mt-[57px] sm:mt-[65px]">
-        {/* Mobile Preview Toggle - Show preview button on mobile */}
-        <div className="lg:hidden fixed bottom-4 right-4 z-50">
-          <button
-            onClick={() => {
-              const preview = document.querySelector('[data-resume-preview]')
-              if (preview) {
-                const isHidden = preview.classList.contains('hidden')
-                if (isHidden) {
-                  preview.classList.remove('hidden')
-                  preview.classList.add('fixed', 'inset-0', 'bg-white', 'z-40', 'overflow-y-auto')
-                } else {
-                  preview.classList.add('hidden')
-                  preview.classList.remove('fixed', 'inset-0', 'bg-white', 'z-40', 'overflow-y-auto')
-                }
-              }
-            }}
-            className="px-3 sm:px-4 py-2 bg-gray-900 text-white rounded-lg text-xs sm:text-sm font-medium shadow-lg hover:bg-gray-800 active:bg-gray-700 transition-colors flex items-center gap-1.5 sm:gap-2"
-          >
-            <Icon name="preview" className="text-xs sm:text-sm" />
-            <span className="hidden xs:inline">Preview</span>
-          </button>
-        </div>
         <ResumeForm
           resumeData={resumeData}
           currentSection={currentSection}
@@ -603,11 +592,20 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                       : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
                   }`}
                 >
-                  {/* Preview */}
-                  <div className="relative bg-gray-50 p-6 h-64 flex items-center justify-center">
-                    <div className="w-full h-full bg-white border border-gray-200 rounded p-4 overflow-hidden">
+                  {/* Preview - True Paper Representation */}
+                  <div className="relative bg-gray-50 p-4 sm:p-5 md:p-6 flex items-center justify-center">
+                    {/* Paper frame - US Letter: 8.5" x 11" (aspect ratio 1:1.294) - True physical paper */}
+                    <div 
+                      className="relative bg-white w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px]"
+                      style={{
+                        aspectRatio: '8.5 / 11', // US Letter aspect ratio (exact)
+                        border: '0.5px solid #D1D5DB', // Thin light-gray page border
+                        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)', // Soft subtle shadow for paper lift
+                      }}
+                    >
+                      <div className="w-full h-full p-2 sm:p-2.5 md:p-3 overflow-hidden flex flex-col" style={{ boxSizing: 'border-box' }}>
                       {template.id === 'compact' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="text-[8px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                           <div className="text-[5px] text-gray-600 text-center mb-1">Software Engineer</div>
                           <div className="h-px bg-gray-300 my-1"></div>
@@ -644,7 +642,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                         </div>
                       )}
                       {template.id === 'modern' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="text-[9px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                           <div className="text-[5px] text-gray-600 text-center mb-2">Software Engineer</div>
                           <div className="h-px bg-gray-300 my-1"></div>
@@ -680,7 +678,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                         </div>
                       )}
                       {template.id === 'classic' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="text-[9px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
                           <div className="text-[5px] text-gray-600 text-center mb-2">Software Engineer</div>
                           <div className="h-px bg-gray-300 my-1"></div>
@@ -702,7 +700,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                         </div>
                       )}
                       {template.id === 'minimal' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="text-[8px] font-semibold text-center mb-1">Ronald Moran Jr</div>
                           <div className="h-0.5 bg-gray-300 my-1"></div>
                           <div className="flex gap-2 flex-1 mt-0.5">
@@ -730,7 +728,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                         </div>
                       )}
                       {template.id === 'corporate' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="text-[10px] font-bold mb-0.5">Ronald Moran Jr</div>
                           <div className="text-[6px] text-gray-700 mb-1">Software Engineer</div>
                           <div className="h-0.5 bg-blue-500 w-1/4 mb-1"></div>
@@ -768,7 +766,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                         </div>
                       )}
                       {template.id === 'with-image' && (
-                        <div className="w-full h-full flex flex-col text-[6px] leading-tight">
+                        <div className="w-full h-full flex flex-col text-[6px] leading-tight flex-1">
                           <div className="mb-1.5 pb-1 border-b border-gray-300">
                             <div className="text-[7px] font-bold mb-0.5">Ronald Moran Jr</div>
                             <div className="text-[5px] text-gray-600 mb-0.5">Software Engineer</div>
@@ -805,6 +803,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                           </div>
                         </div>
                       )}
+                      </div>
                     </div>
                     {selectedTemplate === template.id && (
                       <div className="absolute top-3 right-3 bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
@@ -972,6 +971,44 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
                   </div>
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preview Modal */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 flex-shrink-0">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Resume Preview</h2>
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+              >
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 flex items-start justify-center min-h-0">
+              <div className="w-full flex justify-center">
+                {/* Scaled preview wrapper - maintains true US Letter aspect ratio (8.5:11) */}
+                <div className="transform scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.65] origin-top">
+                  {/* Actual resume content - true physical dimensions (215.9mm x 279.4mm = US Letter) */}
+                  <ResumePreview
+                    resumeData={resumeData}
+                    selectedTemplate={selectedTemplate}
+                    selectedFont={selectedFont}
+                    selectedColor={selectedColor}
+                    themeColor={themeColor}
+                    inModal={true}
+                    onDownloadReady={(downloadFn) => {
+                      downloadPDFRef.current = downloadFn
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
