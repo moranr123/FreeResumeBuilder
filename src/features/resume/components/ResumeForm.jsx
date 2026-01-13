@@ -13,7 +13,7 @@ function ResumeForm({
   resumeData,
   currentSection,
   setCurrentSection,
-  selectedTemplate = 'compact',
+  selectedTemplate = 'modern',
   onFinish,
   onGoBack,
   updatePersonalInfo,

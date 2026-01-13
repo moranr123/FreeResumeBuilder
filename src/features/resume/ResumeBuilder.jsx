@@ -40,7 +40,7 @@ const getSectionsForTemplate = (template) => {
 }
 
 function ResumeBuilder({ 
-  selectedTemplate: initialTemplate = 'compact', 
+  selectedTemplate: initialTemplate = 'modern', 
   themeColor = '#F2F2F2', 
   onBack,
   templateColors = {},
@@ -636,72 +636,6 @@ function ResumeBuilder({
                       }}
                     >
                       <div className="w-full h-full p-0.5 sm:p-1 md:p-1.5 overflow-hidden flex flex-col" style={{ boxSizing: 'border-box' }}>
-                      {template.id === 'compact' && (() => {
-                        const previewColor = getPreviewColor(template.id)
-                        return (
-                        <div className="w-full h-full flex flex-col text-[4px] sm:text-[5px] md:text-[5.5px] leading-[1.15] flex-1">
-                          <div className="text-[6px] sm:text-[7px] md:text-[8px] font-bold text-center mb-0.5">Ronald Moran Jr</div>
-                          <div className="text-[3px] sm:text-[4px] md:text-[4.5px] text-gray-600 text-center mb-0.5">Software Engineer | email@example.com | +1 (555) 000-0000</div>
-                          <div className="h-px my-0.5" style={{ backgroundColor: previewColor }}></div>
-                          <div className="flex gap-1 sm:gap-1.5 flex-1 mt-0.5">
-                            <div className="w-[30%] flex flex-col gap-0.5">
-                              <div className="flex flex-col gap-0.5">
-                                <div className="text-[3px] sm:text-[4px] md:text-[4.5px] font-bold uppercase">Skills</div>
-                                <div className="h-px mb-0.5" style={{ backgroundColor: previewColor }}></div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">JavaScript</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Python</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">React</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Node.js</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">TypeScript</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">SQL</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">System Design</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Microservices</div>
-                              </div>
-                              <div className="flex flex-col gap-0.5">
-                                <div className="text-[3px] sm:text-[4px] md:text-[4.5px] font-bold uppercase">Tools</div>
-                                <div className="h-px mb-0.5" style={{ backgroundColor: previewColor }}></div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Git</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Docker</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">AWS</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">PostgreSQL</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">MongoDB</div>
-                              </div>
-                              <div className="flex flex-col gap-0.5">
-                                <div className="text-[3px] sm:text-[4px] md:text-[4.5px] font-bold uppercase">Education</div>
-                                <div className="h-px mb-0.5" style={{ backgroundColor: previewColor }}></div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] font-semibold">BS Computer Science</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">State University</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">2016 - 2020</div>
-                              </div>
-                            </div>
-                            <div className="w-[70%] flex flex-col gap-0.5">
-                              <div className="flex flex-col gap-0.5">
-                                <div className="text-[3px] sm:text-[4px] md:text-[4.5px] font-bold uppercase">Summary</div>
-                                <div className="h-px mb-0.5" style={{ backgroundColor: previewColor }}></div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers.</div>
-                              </div>
-                              <div className="flex flex-col gap-0.5">
-                                <div className="text-[3px] sm:text-[4px] md:text-[4.5px] font-bold uppercase">Experience</div>
-                                <div className="h-px mb-0.5" style={{ backgroundColor: previewColor }}></div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] font-semibold">Senior Software Engineer</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Tech Company Inc. | Jan 2021 - Present</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Led development of microservices architecture serving 2M+ daily active users, reducing latency by 40%</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Architected real-time data processing pipeline handling 50K requests/second</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Mentored team of 5 junior engineers, establishing code review practices and technical standards</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Optimized database queries and caching strategies, improving API response time by 60%</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Collaborated with product and design teams to deliver features increasing user engagement by 25%</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] font-semibold mt-0.5">Software Engineer</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">Startup Solutions | Jun 2019 - Dec 2020</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Developed full-stack web applications using React, Node.js, and PostgreSQL</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Built RESTful APIs and GraphQL endpoints supporting mobile and web clients</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Implemented automated testing suite achieving 85% code coverage, reducing production bugs by 50%</div>
-                                <div className="text-[2.5px] sm:text-[3.5px] md:text-[4px] text-gray-600">• Deployed applications on AWS using Docker and Kubernetes, ensuring 99.9% uptime</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        )
-                      })()}
                       {template.id === 'modern' && (() => {
                         const previewColor = getPreviewColor(template.id)
                         return (

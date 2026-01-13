@@ -1,11 +1,5 @@
 export const templates = [
   {
-    id: 'compact',
-    name: 'Compact Professional',
-    description: 'Dense two-column layout, maximizes space for one-page fit',
-    features: ['Two-column', 'ATS-friendly', 'One-page optimized', 'Compact spacing']
-  },
-  {
     id: 'modern',
     name: 'Modern Clean',
     description: 'Balanced layout with modern typography and clean lines',

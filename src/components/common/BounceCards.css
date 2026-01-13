@@ -1,0 +1,38 @@
+.bounceCardsContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  height: 500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .bounceCardsContainer {
+    height: 400px;
+  }
+}
+
+.card {
+  position: absolute;
+  width: 200px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  cursor: pointer;
+  transition: filter 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .card {
+    width: 160px;
+  }
+}
+
+.card:hover {
+  filter: brightness(1.05);
+  z-index: 10;
+}

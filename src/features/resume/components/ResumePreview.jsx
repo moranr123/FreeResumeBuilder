@@ -5,7 +5,7 @@ import Icon from '../../../components/common/Icon'
 import { fonts } from '../../../constants/fonts'
 import { getColorScheme } from '../../../constants/colors'
 
-function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont = 'inter', selectedColor = 'black', themeColor = '#F2F2F2', onDownloadReady, inModal = false }) {
+function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont = 'inter', selectedColor = 'black', themeColor = '#F2F2F2', onDownloadReady, inModal = false }) {
   const resumeRef = useRef(null)
   const colorScheme = getColorScheme(selectedColor)
 
@@ -155,7 +155,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
       corporate: `${base} text-[10pt] leading-[1.5] p-[12mm_15mm]`,
       'with-image': `${base} text-[9.5pt] leading-[1.4] p-[10mm_12mm]`,
     }
-    return styles[selectedTemplate] || styles.compact
+    return styles[selectedTemplate] || styles.modern
   }
 
   // Standardized divider element for PDF-safe rendering
@@ -211,9 +211,9 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
 
 
     return (
-      <header className={headerStyles[selectedTemplate] || headerStyles.compact}>
+      <header className={headerStyles[selectedTemplate] || headerStyles.modern}>
         <h1 
-          className={nameStyles[selectedTemplate] || nameStyles.compact}
+          className={nameStyles[selectedTemplate] || nameStyles.modern}
           style={{ 
             color: colorScheme.colors.primary,
             whiteSpace: 'normal',
@@ -227,7 +227,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
         </h1>
         {resumeData.personalInfo.title && (
           <p 
-            className={titleStyles[selectedTemplate] || titleStyles.compact}
+            className={titleStyles[selectedTemplate] || titleStyles.modern}
             style={{ 
               color: colorScheme.colors.tertiary,
               whiteSpace: 'normal',
@@ -241,7 +241,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
           </p>
         )}
         <div 
-          className={contactStyles[selectedTemplate] || contactStyles.compact}
+          className={contactStyles[selectedTemplate] || contactStyles.modern}
           style={{ 
             color: colorScheme.colors.tertiary,
             whiteSpace: 'normal',
@@ -315,7 +315,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'compact', selectedFont 
     return (
       <>
         <h2 
-          className={headerStyles[selectedTemplate] || headerStyles.compact} 
+          className={headerStyles[selectedTemplate] || headerStyles.modern} 
           style={{ 
             fontVariant: 'small-caps', 
             color: headerColor,

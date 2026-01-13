@@ -10,6 +10,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "gsap": "^3.14.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "react": "^18.2.0",
