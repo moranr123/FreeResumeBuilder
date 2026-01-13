@@ -90,7 +90,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
         style={{
           width: '100%',
           height: '0.75pt',
-          backgroundColor: '#000000',
+          backgroundColor: themeColor,
           marginTop: '8pt',
           marginBottom: '8pt',
           border: 'none',
@@ -232,7 +232,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
         style={{
           width: '100%',
           height: '0.75pt',
-          backgroundColor: '#000000',
+          backgroundColor: themeColor,
           margin: 0,
           padding: 0,
           border: 'none',
