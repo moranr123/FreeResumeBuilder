@@ -559,6 +559,7 @@ function ResumeBuilder({
           setCurrentSection={setCurrentSection}
           selectedTemplate={selectedTemplate}
           onFinish={handleFinish}
+          onGoBack={handleGoBack}
           updatePersonalInfo={updatePersonalInfo}
           updateSummary={updateSummary}
           addExperience={addExperience}

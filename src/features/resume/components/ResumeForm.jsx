@@ -15,6 +15,7 @@ function ResumeForm({
   setCurrentSection,
   selectedTemplate = 'compact',
   onFinish,
+  onGoBack,
   updatePersonalInfo,
   updateSummary,
   addExperience,
@@ -1311,16 +1312,12 @@ function ResumeForm({
         {/* Navigation Buttons */}
         <div className="flex justify-between items-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200 gap-3">
           <button
-            onClick={prevSection}
-            disabled={currentSection === 0}
-            className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-medium transition-colors flex items-center gap-1.5 sm:gap-2 ${
-              currentSection === 0
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100'
-            }`}
+            onClick={currentSection === 0 ? onGoBack : prevSection}
+            className="px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-medium transition-colors flex items-center gap-1.5 sm:gap-2 bg-black text-white hover:bg-gray-800 active:bg-gray-900"
           >
             <span className="text-base sm:text-lg">←</span>
-            <span className="hidden xs:inline">Previous</span>
+            <span className="hidden sm:inline">Go Back</span>
+            <span className="sm:hidden">Back</span>
           </button>
           {currentSection === sections.length - 1 ? (
             <button
@@ -1335,7 +1332,7 @@ function ResumeForm({
               onClick={nextSection}
               className="px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base font-medium transition-colors flex items-center gap-1.5 sm:gap-2 bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
             >
-              <span className="hidden xs:inline">Next</span>
+              <span>Next</span>
               <span className="text-base sm:text-lg">→</span>
             </button>
           )}
