@@ -381,8 +381,8 @@ function ResumeBuilder({
             </svg>
           </button>
 
-          {/* Progress Bar - Centered */}
-          <div className="flex-1 flex justify-center min-w-0">
+          {/* Progress Bar - Centered on mobile, left-aligned on desktop */}
+          <div className="flex-1 flex justify-center lg:justify-start min-w-0 lg:ml-4">
             <div className="max-w-[200px] sm:max-w-[280px] md:max-w-md w-full">
               <div className="flex items-center justify-between mb-1 sm:mb-1.5 gap-1">
               {sections.map((section, index) => (
