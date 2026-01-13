@@ -995,7 +995,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
               <div className="w-full h-full flex justify-center items-center">
                 {/* Scaled preview wrapper - maintains true US Letter aspect ratio (8.5:11) */}
                 {/* Scale calculated to fit within available space without scrolling */}
-                <div className="transform scale-[0.25] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.55] origin-center">
+                <div className="transform scale-[0.35] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65] xl:scale-[0.75] origin-center">
                   {/* Actual resume content - true physical dimensions (215.9mm x 279.4mm = US Letter) */}
                   <ResumePreview
                     resumeData={resumeData}
