@@ -978,23 +978,24 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
 
       {/* Preview Modal */}
       {showPreviewModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 flex-shrink-0">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Resume Preview</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-3 md:p-4">
+          <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-3 sm:p-4 md:p-5 border-b border-gray-200 flex-shrink-0">
+              <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">Resume Preview</h2>
               <button
                 onClick={() => setShowPreviewModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 p-1"
               >
                 <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 flex items-start justify-center min-h-0">
-              <div className="w-full flex justify-center">
+            <div className="flex-1 overflow-hidden p-2 sm:p-3 md:p-4 lg:p-6 bg-gray-50 flex items-center justify-center min-h-0">
+              <div className="w-full h-full flex justify-center items-center">
                 {/* Scaled preview wrapper - maintains true US Letter aspect ratio (8.5:11) */}
-                <div className="transform scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.65] origin-top">
+                {/* Scale calculated to fit within available space without scrolling */}
+                <div className="transform scale-[0.25] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.55] origin-center">
                   {/* Actual resume content - true physical dimensions (215.9mm x 279.4mm = US Letter) */}
                   <ResumePreview
                     resumeData={resumeData}
