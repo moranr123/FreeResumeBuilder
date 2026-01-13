@@ -118,6 +118,26 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
       backgroundColor: themeColor,
       marginBottom: 4,
     },
+    modernSectionDivider: {
+      width: '100%',
+      height: 0.75,
+      backgroundColor: themeColor,
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    modernSectionHeader: {
+      fontSize: 10,
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      color: colorScheme.colors.primary,
+      marginTop: 7, // 6-8pt spacing from divider to title
+      marginBottom: 0,
+      fontVariant: 'small-caps',
+    },
+    modernSectionContent: {
+      marginTop: 7, // 6-8pt spacing from title to content
+      marginBottom: 0,
+    },
     listItem: {
       fontSize: 8.5,
       color: colorScheme.colors.secondary,
@@ -195,12 +215,19 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
 
   const renderDivider = () => <View style={styles.divider} />
 
-  const renderSectionHeader = (title) => (
-    <View style={styles.section}>
-      <Text style={styles.sectionHeader}>{title}</Text>
-      <View style={styles.sectionDivider} />
-    </View>
-  )
+  // Render section header for all templates: divider first, then title
+  const renderSectionHeader = (title) => {
+    const headerColor = selectedTemplate === 'corporate' 
+      ? themeColor 
+      : colorScheme.colors.primary
+    
+    return (
+      <View style={{ marginBottom: 0, padding: 0 }}>
+        <View style={styles.modernSectionDivider} />
+        <Text style={[styles.modernSectionHeader, { color: headerColor }]}>{title}</Text>
+      </View>
+    )
+  }
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -242,59 +269,79 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
   const renderTwoColumnLayout = () => (
     <View style={styles.twoColumn}>
       <View style={styles.leftColumn}>
-        {renderSectionHeader('Skills')}
-        {(resumeData.skills.length > 0 ? resumeData.skills : [
-          { id: 1, name: 'JavaScript' },
-          { id: 2, name: 'Python' },
-          { id: 3, name: 'React' },
-          { id: 4, name: 'Node.js' },
-        ]).map(skill => (
-          <Text key={skill.id} style={styles.listItem}>{skill.name}</Text>
-        ))}
-
-        {renderSectionHeader('Tools')}
-        {(resumeData.tools.length > 0 ? resumeData.tools : [
-          { id: 1, name: 'Git' },
-          { id: 2, name: 'Docker' },
-          { id: 3, name: 'AWS' },
-          { id: 4, name: 'PostgreSQL' },
-        ]).map(tool => (
-          <Text key={tool.id} style={styles.listItem}>{tool.name}</Text>
-        ))}
-
-        {renderSectionHeader('Languages')}
-        {(resumeData.languages.length > 0 ? resumeData.languages : [
-          { id: 1, name: 'English', proficiency: 'Native' },
-          { id: 2, name: 'Spanish', proficiency: 'Fluent' },
-        ]).map(lang => (
-          <View key={lang.id} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
-            <Text style={[styles.listItem, { fontWeight: 'bold' }]}>{lang.name}</Text>
-            <Text style={[styles.listItem, { fontSize: 7.5, color: colorScheme.colors.muted }]}>{lang.proficiency}</Text>
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Skills')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.skills.length > 0 ? resumeData.skills : [
+              { id: 1, name: 'JavaScript' },
+              { id: 2, name: 'Python' },
+              { id: 3, name: 'React' },
+              { id: 4, name: 'Node.js' },
+            ]).map(skill => (
+              <Text key={skill.id} style={styles.listItem}>{skill.name}</Text>
+            ))}
           </View>
-        ))}
+        </View>
 
-        {renderSectionHeader('Certifications')}
-        {(resumeData.certifications.length > 0 ? resumeData.certifications : [
-          { id: 1, name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', date: 'Jan 2023' },
-        ]).map(cert => (
-          <View key={cert.id} style={{ marginBottom: 4 }}>
-            <Text style={[styles.listItem, { fontWeight: 'bold' }]}>{cert.name}</Text>
-            {cert.issuer && <Text style={[styles.listItem, { fontSize: 8 }]}>{cert.issuer}</Text>}
-            {cert.date && <Text style={[styles.listItem, { fontSize: 7.5, color: colorScheme.colors.muted }]}>{cert.date}</Text>}
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Tools')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.tools.length > 0 ? resumeData.tools : [
+              { id: 1, name: 'Git' },
+              { id: 2, name: 'Docker' },
+              { id: 3, name: 'AWS' },
+              { id: 4, name: 'PostgreSQL' },
+            ]).map(tool => (
+              <Text key={tool.id} style={styles.listItem}>{tool.name}</Text>
+            ))}
           </View>
-        ))}
+        </View>
+
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Languages')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.languages.length > 0 ? resumeData.languages : [
+              { id: 1, name: 'English', proficiency: 'Native' },
+              { id: 2, name: 'Spanish', proficiency: 'Fluent' },
+            ]).map(lang => (
+              <View key={lang.id} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
+                <Text style={[styles.listItem, { fontWeight: 'bold' }]}>{lang.name}</Text>
+                <Text style={[styles.listItem, { fontSize: 7.5, color: colorScheme.colors.muted }]}>{lang.proficiency}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Certifications')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.certifications.length > 0 ? resumeData.certifications : [
+              { id: 1, name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', date: 'Jan 2023' },
+            ]).map(cert => (
+              <View key={cert.id} style={{ marginBottom: 4 }}>
+                <Text style={[styles.listItem, { fontWeight: 'bold' }]}>{cert.name}</Text>
+                {cert.issuer && <Text style={[styles.listItem, { fontSize: 8 }]}>{cert.issuer}</Text>}
+                {cert.date && <Text style={[styles.listItem, { fontSize: 7.5, color: colorScheme.colors.muted }]}>{cert.date}</Text>}
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
 
       <View style={styles.rightColumn}>
         {resumeData.summary && (
-          <>
+          <View style={{ marginBottom: 6 }}>
             {renderSectionHeader('Summary')}
-            <Text style={styles.summary}>{resumeData.summary}</Text>
-          </>
+            <View style={styles.modernSectionContent}>
+              <Text style={styles.summary}>{resumeData.summary}</Text>
+            </View>
+          </View>
         )}
 
-        {renderSectionHeader('Experience')}
-        {(resumeData.experience.length > 0 ? resumeData.experience : [
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Experience')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.experience.length > 0 ? resumeData.experience : [
           {
             id: 1,
             position: 'Senior Software Engineer',
@@ -326,9 +373,13 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
             ))}
           </View>
         ))}
+          </View>
+        </View>
 
-        {renderSectionHeader('Projects')}
-        {(resumeData.projects.length > 0 ? resumeData.projects : [
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Projects')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.projects.length > 0 ? resumeData.projects : [
           {
             id: 1,
             name: 'E-Commerce Platform',
@@ -350,9 +401,13 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
             ))}
           </View>
         ))}
+          </View>
+        </View>
 
-        {renderSectionHeader('Education')}
-        {(resumeData.education.length > 0 ? resumeData.education : [
+        <View style={{ marginBottom: 6 }}>
+          {renderSectionHeader('Education')}
+          <View style={styles.modernSectionContent}>
+            {(resumeData.education.length > 0 ? resumeData.education : [
           {
             id: 1,
             degree: 'Bachelor of Science in Computer Science',
@@ -381,6 +436,8 @@ function ResumePDF({ resumeData, selectedTemplate = 'modern', selectedFont = 'in
             </View>
           </View>
         ))}
+          </View>
+        </View>
       </View>
     </View>
   )

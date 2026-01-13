@@ -225,23 +225,48 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
     )
   }
 
+  // Render section divider for all templates (full width, no margins)
+  const renderSectionDivider = () => {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '0.75pt',
+          backgroundColor: themeColor,
+          margin: 0,
+          padding: 0,
+          border: 'none',
+        }}
+      />
+    )
+  }
+
+  // Render section header for all templates: divider first, then title
   const renderSectionHeader = (title) => {
     const headerStyles = {
-      compact: 'text-[9.5pt] font-bold uppercase mb-0.5',
-      modern: 'text-[10pt] font-bold uppercase mb-0.5',
-      classic: 'text-[10pt] font-bold uppercase mb-0.5',
-      minimal: 'text-[9pt] font-semibold uppercase mb-0.5',
-      corporate: 'text-[10pt] font-bold uppercase mb-1.5',
-      'with-image': 'text-[10pt] font-bold uppercase mb-1',
+      compact: { fontSize: '9.5pt', fontWeight: 'bold' },
+      modern: { fontSize: '10pt', fontWeight: 'bold' },
+      classic: { fontSize: '10pt', fontWeight: 'bold' },
+      minimal: { fontSize: '9pt', fontWeight: '600' },
+      corporate: { fontSize: '10pt', fontWeight: 'bold' },
+      'with-image': { fontSize: '10pt', fontWeight: 'bold' },
     }
+    
+    const headerStyle = headerStyles[selectedTemplate] || headerStyles.modern
     const headerColor = selectedTemplate === 'corporate' 
       ? themeColor 
       : colorScheme.colors.primary
+    
     return (
       <>
+        {renderSectionDivider()}
         <h2 
-          className={headerStyles[selectedTemplate] || headerStyles.modern} 
+          className="uppercase" 
           style={{ 
+            ...headerStyle,
+            margin: 0,
+            paddingTop: '7pt', // 6-8pt spacing from divider to title
+            paddingBottom: 0,
             fontVariant: 'small-caps', 
             color: headerColor,
             whiteSpace: 'normal',
@@ -253,7 +278,6 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
         >
           {title}
         </h2>
-        {renderDivider()}
       </>
     )
   }
@@ -264,116 +288,124 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
             <aside className="flex-shrink-0" style={{ width: '30%', minWidth: 0, overflow: 'hidden' }}>
               {/* Skills */}
               {(resumeData.skills.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Skills')}
-                  <ul className="list-none p-0 m-0">
-                    {resumeData.skills.length > 0 ? (
-                      resumeData.skills.map(skill => (
-                        <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
-                          {skill.name}
-                        </li>
-                      ))
-                    ) : (
-                      <>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>JavaScript</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Python</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>TypeScript</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>React</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Node.js</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>SQL</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Problem Solving</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>System Design</li>
-                      </>
-                    )}
-                  </ul>
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <ul className="list-none p-0 m-0">
+                      {resumeData.skills.length > 0 ? (
+                        resumeData.skills.map(skill => (
+                          <li key={skill.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
+                            {skill.name}
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>JavaScript</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Python</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>TypeScript</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>React</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Node.js</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>SQL</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Problem Solving</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>System Design</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
                 </section>
               )}
 
               {/* Tools */}
               {(resumeData.tools.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Tools')}
-                  <ul className="list-none p-0 m-0">
-                    {resumeData.tools.length > 0 ? (
-                      resumeData.tools.map(tool => (
-                        <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
-                          {tool.name}
-                        </li>
-                      ))
-                    ) : (
-                      <>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Git</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Docker</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>AWS</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>PostgreSQL</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>MongoDB</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Jest</li>
-                        <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Webpack</li>
-                      </>
-                    )}
-                  </ul>
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <ul className="list-none p-0 m-0">
+                      {resumeData.tools.length > 0 ? (
+                        resumeData.tools.map(tool => (
+                          <li key={tool.id} className="py-0 text-[8.5pt] leading-[1.25]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
+                            {tool.name}
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Git</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Docker</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>AWS</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>PostgreSQL</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>MongoDB</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Jest</li>
+                          <li className="py-0 text-[8.5pt] leading-[1.25] text-gray-400 italic" style={textFlowStyles}>Webpack</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
                 </section>
               )}
 
               {/* Languages */}
               {(resumeData.languages.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Languages')}
-                  <ul className="list-none p-0 m-0">
-                    {resumeData.languages.length > 0 ? (
-                      resumeData.languages.map(lang => (
-                        <li key={lang.id} className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
-                          <span className="font-medium" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{lang.name}</span>
-                          <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{lang.proficiency}</span>
-                        </li>
-                      ))
-                    ) : (
-                      <>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
-                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>English</span>
-                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Native</span>
-                        </li>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
-                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>Spanish</span>
-                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Fluent</span>
-                        </li>
-                        <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
-                          <span className="font-medium text-gray-400 italic" style={textFlowStyles}>French</span>
-                          <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Intermediate</span>
-                        </li>
-                      </>
-                    )}
-                  </ul>
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <ul className="list-none p-0 m-0">
+                      {resumeData.languages.length > 0 ? (
+                        resumeData.languages.map(lang => (
+                          <li key={lang.id} className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                            <span className="font-medium" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{lang.name}</span>
+                            <span className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{lang.proficiency}</span>
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                            <span className="font-medium text-gray-400 italic" style={textFlowStyles}>English</span>
+                            <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Native</span>
+                          </li>
+                          <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                            <span className="font-medium text-gray-400 italic" style={textFlowStyles}>Spanish</span>
+                            <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Fluent</span>
+                          </li>
+                          <li className="py-0 flex justify-between items-center text-[8.5pt] leading-[1.25]" style={textFlowStyles}>
+                            <span className="font-medium text-gray-400 italic" style={textFlowStyles}>French</span>
+                            <span className="text-[7.5pt] text-gray-400 italic" style={textFlowStyles}>Intermediate</span>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
                 </section>
               )}
 
               {/* Certifications */}
               {(resumeData.certifications.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Certifications')}
-                  <div className="flex flex-col gap-1">
-                    {resumeData.certifications.length > 0 ? (
-                      resumeData.certifications.map(cert => (
-                        <div key={cert.id} className="leading-[1.25]">
-                          <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{cert.name}</div>
-                          {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{cert.issuer}</div>}
-                          {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{cert.date}</div>}
-                        </div>
-                      ))
-                    ) : (
-                      <>
-                        <div className="leading-[1.25]">
-                          <div className="text-[8.5pt] font-semibold text-gray-400 italic mb-0">AWS Certified Solutions Architect</div>
-                          <div className="text-[8pt] text-gray-400 italic">Amazon Web Services</div>
-                          <div className="text-[7.5pt] text-gray-400 italic">Jan 2023</div>
-                        </div>
-                        <div className="leading-[1.25]">
-                          <div className="text-[8.5pt] font-semibold text-gray-400 italic mb-0">Google Cloud Professional</div>
-                          <div className="text-[8pt] text-gray-400 italic">Google Cloud Platform</div>
-                          <div className="text-[7.5pt] text-gray-400 italic">Mar 2022</div>
-                        </div>
-                      </>
-                    )}
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <div className="flex flex-col gap-1">
+                      {resumeData.certifications.length > 0 ? (
+                        resumeData.certifications.map(cert => (
+                          <div key={cert.id} className="leading-[1.25]">
+                            <div className="text-[8.5pt] font-semibold mb-0" style={{ color: colorScheme.colors.primary, ...textFlowStyles }}>{cert.name}</div>
+                            {cert.issuer && <div className="text-[8pt]" style={{ color: colorScheme.colors.tertiary, ...textFlowStyles }}>{cert.issuer}</div>}
+                            {cert.date && <div className="text-[7.5pt]" style={{ color: colorScheme.colors.muted, ...textFlowStyles }}>{cert.date}</div>}
+                          </div>
+                        ))
+                      ) : (
+                        <>
+                          <div className="leading-[1.25]">
+                            <div className="text-[8.5pt] font-semibold text-gray-400 italic mb-0">AWS Certified Solutions Architect</div>
+                            <div className="text-[8pt] text-gray-400 italic">Amazon Web Services</div>
+                            <div className="text-[7.5pt] text-gray-400 italic">Jan 2023</div>
+                          </div>
+                          <div className="leading-[1.25]">
+                            <div className="text-[8.5pt] font-semibold text-gray-400 italic mb-0">Google Cloud Professional</div>
+                            <div className="text-[8pt] text-gray-400 italic">Google Cloud Platform</div>
+                            <div className="text-[7.5pt] text-gray-400 italic">Mar 2022</div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </section>
               )}
@@ -383,25 +415,28 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
             <main className="flex-grow" style={{ width: '70%', minWidth: 0, overflow: 'hidden' }}>
               {/* Professional Summary */}
               {(resumeData.summary || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Summary')}
-                  <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
-                    {resumeData.summary ? (
-                      <span style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>{resumeData.summary}</span>
-                    ) : (
-                      <span className="text-gray-400 italic">
-                        Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
-                      </span>
-                    )}
-                  </p>
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
+                      {resumeData.summary ? (
+                        <span style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>{resumeData.summary}</span>
+                      ) : (
+                        <span className="text-gray-400 italic">
+                          Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </section>
               )}
 
               {/* Experience */}
               {(resumeData.experience.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Experience')}
-                  <div className="flex flex-col gap-1">
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <div className="flex flex-col gap-1">
                     {resumeData.experience.length > 0 ? (
                       resumeData.experience.map(exp => (
                       <div key={exp.id} className="break-inside-avoid">
@@ -513,15 +548,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                       </div>
                     </>
                   )}
+                    </div>
                   </div>
                 </section>
               )}
 
               {/* Projects */}
               {(resumeData.projects.length > 0 || true) && (
-                <section className="mb-1.5">
+                <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Projects')}
-                  <div className="flex flex-col gap-1">
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <div className="flex flex-col gap-1">
                     {resumeData.projects.length > 0 ? (
                       resumeData.projects.map(project => (
                       <div key={project.id} className="break-inside-avoid">
@@ -599,15 +636,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                       </div>
                     </>
                   )}
+                    </div>
                   </div>
                 </section>
               )}
 
               {/* Education */}
               {(resumeData.education.length > 0 || true) && (
-                <section className="mb-0">
+                <section className="mb-0" style={{ padding: 0, margin: 0 }}>
                   {renderSectionHeader('Education')}
-                  <div className="flex flex-col gap-1">
+                  <div style={{ paddingTop: '7pt', margin: 0 }}>
+                    <div className="flex flex-col gap-1">
                     {resumeData.education.length > 0 ? (
                       resumeData.education.map(edu => (
                       <div key={edu.id} className="break-inside-avoid">
@@ -653,6 +692,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                       </div>
                     </div>
                   )}
+                    </div>
                   </div>
                 </section>
               )}
@@ -664,25 +704,28 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
     <div className="mt-1.5" style={{ overflow: 'hidden' }}>
       {/* Professional Summary */}
       {(resumeData.summary || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Summary')}
-          <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
-            {resumeData.summary ? (
-              <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
-            ) : (
-              <span className="text-gray-400 italic">
-                Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
-              </span>
-            )}
-          </p>
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <p className="m-0 text-[8.5pt] leading-[1.3]" style={{ whiteSpace: 'normal', wordBreak: 'normal', overflowWrap: 'break-word' }}>
+              {resumeData.summary ? (
+                <span style={{ color: colorScheme.colors.secondary }}>{resumeData.summary}</span>
+              ) : (
+                <span className="text-gray-400 italic">
+                  Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies. Passionate about writing clean, maintainable code and mentoring junior developers to build high-performing engineering teams.
+                </span>
+              )}
+            </p>
+          </div>
         </section>
       )}
 
       {/* Experience */}
       {(resumeData.experience.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Experience')}
-          <div className="flex flex-col gap-1">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-col gap-1">
             {resumeData.experience.length > 0 ? (
               resumeData.experience.map(exp => (
                 <div key={exp.id} className="break-inside-avoid">
@@ -794,15 +837,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 </div>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Projects */}
       {(resumeData.projects.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Projects')}
-          <div className="flex flex-col gap-1">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-col gap-1">
             {resumeData.projects.length > 0 ? (
               resumeData.projects.map(project => (
                 <div key={project.id} className="break-inside-avoid">
@@ -880,15 +925,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 </div>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Education */}
       {(resumeData.education.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Education')}
-          <div className="flex flex-col gap-1">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-col gap-1">
             {resumeData.education.length > 0 ? (
               resumeData.education.map(edu => (
                 <div key={edu.id} className="break-inside-avoid">
@@ -934,15 +981,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 </div>
               </div>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Skills */}
       {(resumeData.skills.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Skills')}
-          <div className="flex flex-wrap gap-1.5">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-wrap gap-1.5">
             {resumeData.skills.length > 0 ? (
               resumeData.skills.map(skill => (
                 <span key={skill.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
@@ -961,15 +1010,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 <span className="text-[8.5pt] text-gray-400 italic">System Design</span>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Tools */}
       {(resumeData.tools.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Tools')}
-          <div className="flex flex-wrap gap-1.5">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-wrap gap-1.5">
             {resumeData.tools.length > 0 ? (
               resumeData.tools.map(tool => (
                 <span key={tool.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
@@ -987,15 +1038,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 <span className="text-[8.5pt] text-gray-400 italic">Webpack</span>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Languages */}
       {(resumeData.languages.length > 0 || true) && (
-        <section className="mb-1.5">
+        <section className="mb-1.5" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Languages')}
-          <div className="flex flex-wrap gap-2">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-wrap gap-2">
             {resumeData.languages.length > 0 ? (
               resumeData.languages.map(lang => (
                 <span key={lang.id} className="text-[8.5pt]" style={{ color: colorScheme.colors.secondary }}>
@@ -1009,15 +1062,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 <span className="text-[8.5pt] text-gray-400 italic">French <span className="text-[7.5pt] text-gray-400 italic">(Intermediate)</span></span>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Certifications */}
       {(resumeData.certifications.length > 0 || true) && (
-        <section className="mb-0">
+        <section className="mb-0" style={{ padding: 0, margin: 0 }}>
           {renderSectionHeader('Certifications')}
-          <div className="flex flex-col gap-1">
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <div className="flex flex-col gap-1">
             {resumeData.certifications.length > 0 ? (
               resumeData.certifications.map(cert => (
                 <div key={cert.id} className="leading-[1.25]">
@@ -1040,6 +1095,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 </div>
               </>
             )}
+            </div>
           </div>
         </section>
       )}
@@ -1052,9 +1108,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
       <aside className="flex-shrink-0" style={{ width: '35%', minWidth: 0, overflow: 'hidden' }}>
         {/* Education */}
         {(resumeData.education.length > 0 || true) && (
-          <section className="mb-4">
+          <section className="mb-4" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Education')}
-            <div className="flex flex-col gap-2.5">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-2.5">
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-1">
@@ -1079,14 +1136,16 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   <div className="text-[8.5pt] text-gray-400 italic mt-0.5">2016 - 2020</div>
                 </div>
               )}
+              </div>
             </div>
           </section>
         )}
 
         {/* Skills */}
         {(resumeData.skills.length > 0 || true) && (
-          <section className="mb-4">
+          <section className="mb-4" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Skills')}
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
             <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
@@ -1105,6 +1164,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                 </>
               )}
             </ul>
+            </div>
           </section>
         )}
       </aside>
@@ -1113,9 +1173,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
       <main className="flex-grow" style={{ width: '65%', minWidth: 0, overflow: 'hidden' }}>
         {/* Professional Summary */}
         {(resumeData.summary || true) && (
-          <section className="mb-4">
+          <section className="mb-4" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9.5pt] leading-[1.5]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <p className="m-0 text-[9.5pt] leading-[1.5]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
@@ -1123,15 +1184,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies.
                 </span>
               )}
-            </p>
+              </p>
+            </div>
           </section>
         )}
 
         {/* Work History */}
         {(resumeData.experience.length > 0 || true) && (
-          <section className="mb-4">
+          <section className="mb-4" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Work History')}
-            <div className="flex flex-col gap-3">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-3">
               {resumeData.experience.length > 0 ? (
                 resumeData.experience.map(exp => (
                   <div key={exp.id} className="mb-1">
@@ -1227,6 +1290,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   </div>
                 </>
               )}
+              </div>
             </div>
           </section>
         )}
@@ -1257,9 +1321,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
 
         {/* Skills */}
         {(resumeData.skills.length > 0 || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Skills')}
-            <ul className="list-none p-0 m-0">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <ul className="list-none p-0 m-0">
               {resumeData.skills.length > 0 ? (
                 resumeData.skills.map(skill => (
                   <li key={skill.id} className="py-0.5 text-[8.5pt] leading-[1.3]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
@@ -1275,15 +1340,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   <li className="py-0.5 text-[8.5pt] leading-[1.3] text-gray-400 italic" style={textFlowStyles}>SQL</li>
                 </>
               )}
-            </ul>
+              </ul>
+            </div>
           </section>
         )}
 
         {/* Languages */}
         {(resumeData.languages.length > 0 || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Languages')}
-            <ul className="list-none p-0 m-0">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <ul className="list-none p-0 m-0">
               {resumeData.languages.length > 0 ? (
                 resumeData.languages.map(lang => (
                   <li key={lang.id} className="py-0.5 flex justify-between items-center text-[8.5pt] leading-[1.3]" style={textFlowStyles}>
@@ -1303,15 +1370,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   </li>
                 </>
               )}
-            </ul>
+              </ul>
+            </div>
           </section>
         )}
 
         {/* Certifications */}
         {(resumeData.certifications.length > 0 || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Certifications')}
-            <div className="flex flex-col gap-1.5">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-1.5">
               {resumeData.certifications.length > 0 ? (
                 resumeData.certifications.map(cert => (
                   <div key={cert.id} className="leading-[1.3]">
@@ -1327,6 +1396,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   <div className="text-[7.5pt] text-gray-400 italic">Jan 2023</div>
                 </div>
               )}
+              </div>
             </div>
           </section>
         )}
@@ -1336,9 +1406,10 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
       <main className="flex-grow" style={{ width: '72%', minWidth: 0, overflow: 'hidden' }}>
         {/* Professional Summary */}
         {(resumeData.summary || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Professional Summary')}
-            <p className="m-0 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <p className="m-0 text-[9pt] leading-[1.4]" style={{ color: colorScheme.colors.secondary, ...textFlowStyles }}>
               {resumeData.summary ? (
                 <span>{resumeData.summary}</span>
               ) : (
@@ -1346,15 +1417,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users.
                 </span>
               )}
-            </p>
+              </p>
+            </div>
           </section>
         )}
 
         {/* Experience */}
         {(resumeData.experience.length > 0 || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Experience')}
-            <div className="flex flex-col gap-2">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-2">
               {resumeData.experience.length > 0 ? (
                 resumeData.experience.map(exp => (
                   <div key={exp.id} className="mb-1">
@@ -1422,15 +1495,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   </div>
                 </>
               )}
+              </div>
             </div>
           </section>
         )}
 
         {/* Education */}
         {(resumeData.education.length > 0 || true) && (
-          <section className="mb-3">
+          <section className="mb-3" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Education')}
-            <div className="flex flex-col gap-2">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-2">
               {resumeData.education.length > 0 ? (
                 resumeData.education.map(edu => (
                   <div key={edu.id} className="mb-0">
@@ -1458,15 +1533,17 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   <div className="text-[8pt] text-gray-400 italic mt-0.5">2016 - 2020</div>
                 </div>
               )}
+              </div>
             </div>
           </section>
         )}
 
         {/* Projects */}
         {(resumeData.projects.length > 0 || true) && (
-          <section className="mb-0">
+          <section className="mb-0" style={{ padding: 0, margin: 0 }}>
             {renderSectionHeader('Projects')}
-            <div className="flex flex-col gap-2">
+            <div style={{ paddingTop: '7pt', margin: 0 }}>
+              <div className="flex flex-col gap-2">
               {resumeData.projects.length > 0 ? (
                 resumeData.projects.map(project => (
                   <div key={project.id} className="mb-0">
@@ -1506,6 +1583,7 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
                   </ul>
                 </div>
               )}
+              </div>
             </div>
           </section>
         )}
