@@ -980,7 +980,7 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
       {showPreviewModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-3 md:p-4">
           <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-3 sm:p-4 md:p-5 border-b border-gray-200 flex-shrink-0">
+            <div className="flex items-center justify-between p-2.5 sm:p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
               <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">Resume Preview</h2>
               <button
                 onClick={() => setShowPreviewModal(false)}
@@ -994,8 +994,8 @@ function ResumeBuilder({ selectedTemplate: initialTemplate = 'compact', themeCol
             <div className="flex-1 overflow-hidden p-2 sm:p-3 md:p-4 lg:p-6 bg-gray-50 flex items-center justify-center min-h-0">
               <div className="w-full h-full flex justify-center items-center">
                 {/* Scaled preview wrapper - maintains true US Letter aspect ratio (8.5:11) */}
-                {/* Scale calculated to fit within available space without scrolling */}
-                <div className="transform scale-[0.35] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65] xl:scale-[0.75] origin-center">
+                {/* Scale calculated to fit perfectly within modal without scrolling */}
+                <div className="transform scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.65] xl:scale-[0.7] origin-center">
                   {/* Actual resume content - true physical dimensions (215.9mm x 279.4mm = US Letter) */}
                   <ResumePreview
                     resumeData={resumeData}
