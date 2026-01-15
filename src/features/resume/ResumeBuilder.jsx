@@ -44,7 +44,58 @@ function ResumeBuilder({
   const [resumeData, setResumeData] = useState(() => {
     try {
       const saved = localStorage.getItem('resumeBuilder_resumeData')
-      return saved ? JSON.parse(saved) : initialResumeData
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        // Ensure all array sections have at least one default entry
+        if (!parsed.experience || parsed.experience.length === 0) {
+          parsed.experience = [{
+            id: Date.now(),
+            company: '',
+            position: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            current: false,
+            description: '',
+          }]
+        }
+        if (!parsed.education || parsed.education.length === 0) {
+          parsed.education = [{
+            id: Date.now(),
+            school: '',
+            degree: '',
+            field: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            gpa: '',
+          }]
+        }
+        if (!parsed.skills || parsed.skills.length === 0) {
+          parsed.skills = [{ id: Date.now(), name: '', level: 5 }]
+        }
+        if (!parsed.tools || parsed.tools.length === 0) {
+          parsed.tools = [{ id: Date.now(), name: '' }]
+        }
+        if (!parsed.languages || parsed.languages.length === 0) {
+          parsed.languages = [{ id: Date.now(), name: '', proficiency: 'Fluent' }]
+        }
+        if (!parsed.certifications || parsed.certifications.length === 0) {
+          parsed.certifications = [{ id: Date.now(), name: '', issuer: '', date: '' }]
+        }
+        if (!parsed.projects || parsed.projects.length === 0) {
+          parsed.projects = [{
+            id: Date.now(),
+            name: '',
+            description: '',
+            technologies: '',
+            link: '',
+            github: '',
+          }]
+        }
+        return parsed
+      }
+      return initialResumeData
     } catch (error) {
       console.error('Error loading resume data from localStorage:', error)
       return initialResumeData
@@ -159,6 +210,35 @@ function ResumeBuilder({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTemplate])
+
+  // Ensure all sections have at least one entry when accessed
+  useEffect(() => {
+    const sections = getSectionsForTemplate(selectedTemplate)
+    const currentSectionId = sections[currentSection]?.id
+    
+    if (currentSectionId === 'experience' && resumeData.experience.length === 0) {
+      addExperience()
+    } else if (currentSectionId === 'education' && resumeData.education.length === 0) {
+      addEducation()
+    } else if (currentSectionId === 'skills') {
+      // Skills section includes skills, tools, languages, and certifications
+      if (resumeData.skills.length === 0) {
+        addSkill()
+      }
+      if (resumeData.tools.length === 0) {
+        addTool()
+      }
+      if (resumeData.languages.length === 0) {
+        addLanguage()
+      }
+      if (resumeData.certifications.length === 0) {
+        addCertification()
+      }
+    } else if (currentSectionId === 'projects' && resumeData.projects.length === 0) {
+      addProject()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSection, selectedTemplate])
 
   const updatePersonalInfo = useCallback((field, value) => {
     setResumeData(prev => ({
