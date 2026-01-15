@@ -76,21 +76,20 @@ export default function CorporateLayout({
       {/* Right Column - Summary and Work History - Fixed width in print units */}
       <main className="flex-grow" style={{ width: '65%', minWidth: 0, overflow: 'hidden' }}>
         {/* Professional Summary */}
-        {(resumeData.summary || true) && (
-          <section className="mb-4" style={{ padding: 0, margin: 0 }}>
-            {renderSectionHeader('Professional Summary', selectedTemplate, colorScheme, themeColor)}
-            <div style={{ paddingTop: '7pt', margin: 0 }}>
-              <p className="m-0 text-[9.5pt] leading-[1.5] text-gray-700" style={textFlowStyles}>
-                {resumeData.summary ? (
-                  <span>{resumeData.summary}</span>
-                ) : (
-                  <span className="italic text-gray-500">
-                    Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies.
-                  </span>
-                )}
-              </p>
-            </div>
-          </section>
+        <section className="mb-4" style={{ padding: 0, margin: 0 }}>
+          {renderSectionHeader('Professional Summary', selectedTemplate, colorScheme, themeColor)}
+          <div style={{ paddingTop: '7pt', margin: 0 }}>
+            <p className="m-0 text-[9.5pt] leading-[1.5] text-gray-700" style={textFlowStyles}>
+              {hasContent.summary(resumeData.summary) ? (
+                <span>{resumeData.summary}</span>
+              ) : (
+                <span className="italic text-gray-500">
+                  Experienced software engineer with 5+ years of expertise in full-stack development, specializing in modern web technologies and cloud infrastructure. Proven track record of delivering scalable applications serving millions of users. Strong background in system architecture, performance optimization, and agile methodologies.
+                </span>
+              )}
+            </p>
+          </div>
+        </section>
 
         {/* Work History */}
         <section className="mb-4" style={{ padding: 0, margin: 0 }}>
