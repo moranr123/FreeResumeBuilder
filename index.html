@@ -63,6 +63,7 @@
       "url": "https://your-domain.com/",
       "applicationCategory": "UtilityApplication",
       "operatingSystem": "Web Browser",
+      "image": "https://your-domain.com/icon.png",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -90,7 +91,13 @@
       "@type": "Organization",
       "name": "Resume Builder",
       "url": "https://your-domain.com/",
-      "logo": "https://your-domain.com/icon.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://your-domain.com/icon.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://your-domain.com/icon.png",
       "sameAs": []
     }
     </script>
@@ -101,6 +108,14 @@
       "@type": "WebSite",
       "name": "Resume Builder",
       "url": "https://your-domain.com/",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Resume Builder",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://your-domain.com/icon.png"
+        }
+      },
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://your-domain.com/?q={search_term_string}",
