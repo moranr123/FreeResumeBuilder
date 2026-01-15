@@ -26,24 +26,26 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <main className="min-h-screen bg-gray-100" role="main">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         {/* Header */}
-        <div className="text-center mb-6 sm:mb-8 md:mb-12">
+        <header className="text-center mb-6 sm:mb-8 md:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-2 sm:mb-3 md:mb-4 tracking-tight px-2">
             Choose Your Resume Template
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2">
             Select a professionally designed template. All templates are ATS-friendly and optimized for one-page resumes.
           </p>
-        </div>
+        </header>
 
         {/* Template Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10 md:mb-12" aria-label="Resume templates">
           {templates.map((template) => (
-            <div
+            <article
               key={template.id}
               className="relative bg-white border-2 rounded-lg sm:rounded-xl overflow-visible transition-all duration-200 border-gray-200 hover:border-blue-300 hover:shadow-md group"
+              itemScope
+              itemType="https://schema.org/SoftwareApplication"
             >
               {/* Preview - US Letter aspect ratio (1:1.294) with padding for shadow breathing room */}
               <div 
@@ -506,7 +508,8 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                 onMouseEnter={() => setHoveredTemplate(null)}
                 onMouseLeave={() => setHoveredTemplate(null)}
               >
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 text-center">{template.name}</h3>
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 text-center" itemProp="name">{template.name}</h2>
+                <meta itemProp="description" content={template.description} />
                 
                 {/* Color Palette Picker */}
                 <div className="flex items-center justify-center gap-1.5 sm:gap-2">
@@ -551,19 +554,19 @@ function TemplateSelection({ onSelectTemplate, templateColors, onTemplateColorCh
                   <Icon name="briefcase" className="text-white w-4 h-4" />
                 </button>
               </div>
-            </div>
+            </article>
           ))}
-        </div>
+        </section>
 
         {/* Footer */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg p-4 sm:p-5 md:p-6 mx-2 sm:mx-0">
-          <i className="fi fi-rr-info text-blue-500 text-base sm:text-lg"></i>
+        <footer className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 bg-gray-50 rounded-lg p-4 sm:p-5 md:p-6 mx-2 sm:mx-0" role="contentinfo">
+          <i className="fi fi-rr-info text-blue-500 text-base sm:text-lg" aria-hidden="true"></i>
           <span className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
             You can switch templates anytime. Your content will be preserved.
           </span>
-        </div>
+        </footer>
       </div>
-    </div>
+    </main>
   )
 }
 
