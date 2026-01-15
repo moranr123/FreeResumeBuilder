@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import ResumePreview from '../ResumePreview'
 
 /**
@@ -21,12 +22,50 @@ export default function PreviewModal({
   themeColor,
   onDownloadReady,
 }) {
+  const [scale, setScale] = useState(0.4)
+  const [transformOrigin, setTransformOrigin] = useState('top center')
+
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth
+      const padding = 16 // 8px padding on each side
+      
+      if (width < 640) {
+        // Mobile: scale to fit width
+        const availableWidth = width - padding
+        const calculatedScale = availableWidth / 816
+        setScale(calculatedScale)
+        setTransformOrigin('top center')
+      } else if (width < 768) {
+        // Small tablet
+        setScale(0.5)
+        setTransformOrigin('center')
+      } else if (width < 1024) {
+        // Tablet
+        setScale(0.6)
+        setTransformOrigin('center')
+      } else if (width < 1280) {
+        // Small desktop
+        setScale(0.65)
+        setTransformOrigin('center')
+      } else {
+        // Large desktop
+        setScale(0.7)
+        setTransformOrigin('center')
+      }
+    }
+
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
+
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-3 md:p-4">
-      <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-2.5 sm:p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-3 md:p-4">
+      <div className="bg-white rounded-none sm:rounded-lg md:rounded-xl shadow-xl w-full h-full sm:w-auto sm:h-auto sm:max-w-4xl sm:max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between p-3 sm:p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">Resume Preview</h2>
           <button
             onClick={onClose}
@@ -38,11 +77,17 @@ export default function PreviewModal({
           </button>
         </div>
         <div className="flex-1 overflow-auto p-2 sm:p-3 md:p-4 lg:p-6 bg-gray-50 flex items-center justify-center min-h-0">
-          <div className="w-full h-full flex justify-center items-center">
-            {/* Scaled preview wrapper - scales for display but resume is always 816x1056px at 1:1 */}
+          <div className="w-full h-full flex justify-center items-start sm:items-center">
+            {/* Scaled preview wrapper - responsive scaling for mobile, tablet, and desktop */}
             {/* The ResumePreview component always renders at exact 816x1056px internally */}
-            <div className="transform scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.65] xl:scale-[0.7] origin-center">
-              {/* Actual resume content - always 816x1056px (US Letter at 96 DPI) for pixel-perfect WYSIWYG */}
+            {/* Mobile: scale to fit width, larger screens: use fixed scales */}
+            <div 
+              className="transform"
+              style={{
+                transform: `scale(${scale})`,
+                transformOrigin: transformOrigin,
+              }}
+            >
               <ResumePreview
                 resumeData={resumeData}
                 selectedTemplate={selectedTemplate}
