@@ -52,16 +52,49 @@ function ResumePreview({ resumeData, selectedTemplate = 'modern', selectedFont =
       // Generate PDF blob
       const blob = await pdf(pdfDoc).toBlob()
       
-      // Create download link
+      // Detect mobile devices
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                       (window.matchMedia && window.matchMedia('(max-width: 768px)').matches)
+      
+      const fileName = resumeDataRef.current?.personalInfo?.fullName || 'resume'
       const url = URL.createObjectURL(blob)
+      
+      // Create download link
       const link = document.createElement('a')
       link.href = url
-      const fileName = resumeDataRef.current?.personalInfo?.fullName || 'resume'
       link.download = `${fileName}-resume.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      
+      // For mobile, ensure link is properly set up and visible in DOM
+      if (isMobile) {
+        // Make link temporarily visible (but off-screen) for mobile browsers
+        link.style.cssText = 'position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px;'
+        document.body.appendChild(link)
+        
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          // Trigger click in the next frame to ensure it's within user gesture context
+          requestAnimationFrame(() => {
+            link.click()
+            
+            // Clean up after allowing time for download to initiate
+            setTimeout(() => {
+              if (document.body.contains(link)) {
+                document.body.removeChild(link)
+              }
+              // Delay URL revocation on mobile to ensure download completes
+              setTimeout(() => {
+                URL.revokeObjectURL(url)
+              }, 2000)
+            }, 300)
+          })
+        })
+      } else {
+        // Desktop: use standard download approach
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      }
     } catch (error) {
       console.error('Error generating PDF:', error)
       throw error // Re-throw so loading state can be handled
